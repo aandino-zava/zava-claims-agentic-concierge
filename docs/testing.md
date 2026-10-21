@@ -12,11 +12,16 @@ The published agent read structured policy and protected fictional evidence, ret
 
 The assigned Medical Director responded **Escalate** through native Approvals. The worker recorded the authenticated response and saved `Escalated`. Independent readback confirmed the claim remained `Under Review` at version 1, with zero real or simulated claim writes. An escalation has no mutation receipt.
 
+The optional [fictional portal connection](portal-connection.md) was also verified through the published agent, native Gatekeeper and a genuine Medical Director **ApproveAuthorization** response. The portal claim moved from `Under Review` at version 2 to `Approved` at version 3. The portal timeline recorded the evaluation and approval references, and Dataverse recorded `PortalConfirmed` with the matching persisted receipt. An earlier **RequestAdditionalInformation** response left the portal claim unchanged. These results apply only to the explicitly bound fictional case.
+
+The portal connection's focused regression checks also cover omitted versus null Dataverse policy fields: equivalent empty fields match, while new non-null values still block the operation. See the [portal validation run](https://github.com/aandino-zava/zava-health-claims-portal/actions/runs/39675055503) for application checks.
+
 The exported package was also checked by Power Apps Checker with zero findings. Each rebuilt ZIP has its own checksum and Checker status; see the build artifact's `solution/provenance.json`. An earlier package's result does not certify a later build.
 
 ## What remains unverified
 
 - Native approved or denied simulator writes and receipt reconciliation.
+- Native portal denial and recovery after a lost completion acknowledgement; these have focused automated coverage but were not exercised in this live acceptance.
 - The full native concurrency, stale-state and dependency-failure cases.
 - Actual unauthorized-account sign-in and broader multi-user authorization.
 - Receiving-environment import and first-run acceptance, including GitHub federation.

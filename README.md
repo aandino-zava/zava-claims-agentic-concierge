@@ -4,7 +4,7 @@ A Copilot Studio solution for reviewing fictional medical insurance claims again
 
 **Start with the [deployment guide](docs/deployment.md).** It covers configuration, package import, reviewer access and activation. The default deployment uses the simulator. An optional [portal connection](docs/portal-connection.md) can update explicitly allowed fictional claims after a verified Medical Director decision.
 
-https://github.com/user-attachments/assets/6b912b5b-055d-416f-9dc2-0d4bb756f177
+https://github.com/user-attachments/assets/40229fa7-e53e-48b4-bff0-0f961c89fa7c
 
 ## How it works
 
@@ -43,7 +43,7 @@ The design separates policy, intelligence, and execution:
 - **Bounded intelligence — Copilot Studio:** the agent retrieves guideline context, reads policy and evidence, submits an evaluation request, and explains the returned result. Its tools cannot change policy, edit protected evidence, or directly update a claim. Retrieved content and model reasoning cannot supply authorization.
 - **Deterministic enforcement — Power Automate:** the Gatekeeper validates source bindings and policy criteria, then records a durable evaluation. A separate review worker verifies the authenticated Medical Director decision and rechecks current policy, evidence and claim state. It controls simulated operations or queues an explicitly bound fictional portal update; the portal independently checks the decision and protected facts before applying it.
 
-The design keeps policy enforcement and claim operations in a checked process with required human review. Passing an evaluation establishes eligibility for review; a Medical Director must authorize the decision before any simulated claim change. The Gatekeeper pattern remains the central architectural decision.
+The design keeps policy enforcement and claim operations in a checked process with required human review. Passing an evaluation establishes eligibility for review; a Medical Director must authorize the decision before any simulated or explicitly bound fictional portal change. The Gatekeeper pattern remains the central architectural decision.
 
 ## The Gatekeeper pattern explained
 
@@ -54,7 +54,7 @@ The design separates four responsibilities:
 - **Policy and evidence in Dataverse.** Versioned rules and protected evidence live outside the prompt. Search results supply context; a citation alone does not establish a clinical fact or grant permission.
 - **Coordination in Copilot Studio.** The agent has read tools and one evaluation-submission tool. It cannot edit policy, change protected evidence or directly update a claim.
 - **Independent checks in the Gatekeeper.** The evaluation flow reads the authoritative rules, claim snapshot and evidence itself, validates their bindings and applies fixed policy checks. It records the outcome in a durable Claim Evaluation. Missing or contradictory evidence cannot authorize approval; passing the checks establishes eligibility for human review.
-- **Human decision and controlled execution.** The separate review worker verifies the actual Approval responder against the assigned, configured Medical Director. Before a simulated operation, it rechecks policy, evidence and claim versions. Duplicate protection and receipt readback govern what can be reported as completed.
+- **Human decision and controlled execution.** The separate review worker verifies the actual Approval responder against the assigned, configured Medical Director and rechecks policy, evidence and claim versions. An explicitly bound fictional portal operation also passes independent checks in the portal. Duplicate protection and receipt readback govern what can be reported as completed.
 
 The reusable pattern is: **AI coordinates and explains; a controlled process enforces the rules and owns the write.** In this solution, that process also requires an authenticated human decision. Claims remain fictional, including those updated through the optional portal connection; see the [architecture](docs/architecture.md) for the execution boundary and POC limitations.
 
@@ -93,9 +93,9 @@ Packages ship with both flows **Off** and processing disabled. Import does not t
 
 ## Validation and scope
 
-A native demonstration retrieved context, passed the conservative-policy checks and saved an authenticated **Escalate** decision. The claim stayed unchanged. Automated checks cover the local policy reference and deployment safeguards.
+A native demonstration retrieved context, passed the conservative-policy checks and recorded a genuine Medical Director **ApproveAuthorization** response. The explicitly bound fictional portal claim moved from **Under Review, version 2** to **Approved, version 3**. Its portal timeline and Dataverse **PortalConfirmed** receipt agree. An earlier escalation example left its simulated claim unchanged. Automated checks cover the policy reference, deployment safeguards and portal connection controls.
 
-Native approved or denied simulator writes, receipt reconciliation, unauthorized-account sign-in and installation in another environment still require acceptance. This is a single-reviewer proof of concept with restricted application access, not a production claims adjudication system. See [validation and acceptance](docs/testing.md).
+Native portal denial and lost-acknowledgement recovery, approved or denied simulator writes, broader concurrency/failure cases, unauthorized-account sign-in and installation in another environment still require acceptance. This is a single-reviewer proof of concept with restricted application access, not a production claims adjudication system. See [validation and acceptance](docs/testing.md).
 
 ## Read further
 

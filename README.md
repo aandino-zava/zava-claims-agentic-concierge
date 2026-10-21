@@ -2,7 +2,7 @@
 
 A Copilot Studio solution for reviewing fictional medical insurance claims against a versioned medical policy. The agent gathers context, Power Automate checks the protected facts, and a Medical Director records the decision.
 
-**Start with the [deployment guide](docs/deployment.md).** It covers configuration, package import, reviewer access and activation. All claim operations remain simulated.
+**Start with the [deployment guide](docs/deployment.md).** It covers configuration, package import, reviewer access and activation. The default deployment uses the simulator. An optional [portal connection](docs/portal-connection.md) can update explicitly allowed fictional claims after a verified Medical Director decision.
 
 https://github.com/user-attachments/assets/6b912b5b-055d-416f-9dc2-0d4bb756f177
 
@@ -20,6 +20,9 @@ flowchart LR
     Review --> Approval[Medical Director approval]
     Approval --> Review
     Review -->|Verified decision only| Simulator[Claims simulator]
+    Review -->|Explicit fictional portal binding| Queue[(Verified decision queue)]
+    Queue --> Portal[Claims portal checks and update]
+    Portal -->|Confirmed receipt| Record
 ```
 
 ## Design Rationale
@@ -38,7 +41,7 @@ The design separates policy, intelligence, and execution:
 
 - **Decoupled policy — Dataverse:** versioned medical policy rules and protected claim evidence live outside the prompt. The Gatekeeper reads them independently and applies the supported structured criteria. Missing or contradictory evidence blocks approval and requires review or additional information.
 - **Bounded intelligence — Copilot Studio:** the agent retrieves guideline context, reads policy and evidence, submits an evaluation request, and explains the returned result. Its tools cannot change policy, edit protected evidence, or directly update a claim. Retrieved content and model reasoning cannot supply authorization.
-- **Deterministic enforcement — Power Automate:** the Gatekeeper validates source bindings and policy criteria, then records a durable evaluation. A separate review worker verifies the authenticated Medical Director decision, rechecks current policy and evidence versions and claim state, and controls simulated operations with duplicate protection and receipt verification.
+- **Deterministic enforcement — Power Automate:** the Gatekeeper validates source bindings and policy criteria, then records a durable evaluation. A separate review worker verifies the authenticated Medical Director decision and rechecks current policy, evidence and claim state. It controls simulated operations or queues an explicitly bound fictional portal update; the portal independently checks the decision and protected facts before applying it.
 
 The design keeps policy enforcement and claim operations in a checked process with required human review. Passing an evaluation establishes eligibility for review; a Medical Director must authorize the decision before any simulated claim change. The Gatekeeper pattern remains the central architectural decision.
 
@@ -53,7 +56,7 @@ The design separates four responsibilities:
 - **Independent checks in the Gatekeeper.** The evaluation flow reads the authoritative rules, claim snapshot and evidence itself, validates their bindings and applies fixed policy checks. It records the outcome in a durable Claim Evaluation. Missing or contradictory evidence cannot authorize approval; passing the checks establishes eligibility for human review.
 - **Human decision and controlled execution.** The separate review worker verifies the actual Approval responder against the assigned, configured Medical Director. Before a simulated operation, it rechecks policy, evidence and claim versions. Duplicate protection and receipt readback govern what can be reported as completed.
 
-The reusable pattern is: **AI coordinates and explains; a controlled process enforces the rules and owns the write.** In this solution, that process also requires an authenticated human decision. All claims operations remain simulated; see the [architecture](docs/architecture.md) for the execution boundary and POC limitations.
+The reusable pattern is: **AI coordinates and explains; a controlled process enforces the rules and owns the write.** In this solution, that process also requires an authenticated human decision. Claims remain fictional, including those updated through the optional portal connection; see the [architecture](docs/architecture.md) for the execution boundary and POC limitations.
 
 ## What is included
 
@@ -64,6 +67,7 @@ The reusable pattern is: **AI coordinates and explains; a controlled process enf
 | Two Power Automate flows | Evaluate the claim, then manage human review and completion |
 | Claims Review app | Readable evidence and evaluation forms for the reviewer |
 | Medical Director role | Open the app and read the three claims tables |
+| Optional portal-worker role | Read protected decisions and Approval proof; record completion |
 | Eight fictional examples | Exercise complete evidence, missing information and other policy cases |
 
 The native solution is in `solution/src/`. It reuses an Azure AI Search index and requires no additional Azure compute service.
@@ -98,6 +102,7 @@ Native approved or denied simulator writes, receipt reconciliation, unauthorized
 - [Architecture and policy interpretation](docs/architecture.md)
 - [Security controls](docs/security.md)
 - [Demonstration](docs/demo.md)
+- [Connecting fictional portal claims](docs/portal-connection.md)
 - [Maintaining the solution](docs/maintenance.md)
 
 Build and configure the solution in the Power Platform designers. GitHub Actions handles packaging and automated checks; supporting scripts and local verification details are covered in the [maintenance guide](docs/maintenance.md).

@@ -61,6 +61,11 @@ def main():
         default=root.find('defaultvalue')
         if default is not None: default.text=str(neutral.get(suffix,''))
         tree.write(path,encoding='utf-8',xml_declaration=True)
+    for path in (source/'bots').glob('*/configuration.json'):
+        bot_configuration=json.loads(path.read_text(encoding='utf-8-sig'))
+        if 'publishOnImport' in bot_configuration:
+            bot_configuration['publishOnImport']=False
+            path.write_text(json.dumps(bot_configuration,indent=2)+'\n',encoding='utf-8')
     knowledge=[]; retired=[]; enabled_flow_tools=[]
     for path in (source/'botcomponents').glob('*/data'):
         data=path.read_text(encoding='utf-8-sig')
@@ -83,9 +88,18 @@ def main():
         # Do not delete anything in Dev; omit only this disabled local duplicate.
         for path in folder.iterdir(): path.unlink()
         folder.rmdir()
-    role=ET.parse(next((source/'Roles').glob('*.xml'))).getroot()
+    role=ET.parse(source/'Roles/Zava Claims Medical Director.xml').getroot()
     claims_privileges={p.attrib['name']:p.attrib['level'] for p in role.findall('./RolePrivileges/RolePrivilege') if 'cr_claim_' in p.attrib['name'] or 'cr_medical_policy_' in p.attrib['name']}
     assert claims_privileges=={'prvReadcr_claim_evaluation':'Global','prvReadcr_claim_evidence':'Global','prvReadcr_medical_policy_rules':'Global'}, 'Claims-specific role must remain read only'
+    role_count=1
+    worker=source/'Roles/Zava Claims Portal Worker.xml'
+    if worker.exists():
+        role_count+=1
+        worker_root=ET.parse(worker).getroot()
+        worker_claims={p.attrib['name']:p.attrib['level'] for p in worker_root.findall('./RolePrivileges/RolePrivilege')
+                       if 'cr_claim_' in p.attrib['name'] or 'cr_medical_policy_' in p.attrib['name'] or 'msdyn_flow_approval' in p.attrib['name']}
+        assert worker_claims=={**claims_privileges,'prvWritecr_claim_evaluation':'Global',
+            'prvReadmsdyn_flow_approval':'Global','prvReadmsdyn_flow_approvalresponse':'Global'}, 'Unexpected portal-worker claims or Approval permission'
     # Reject rather than silently rewrite unknown credentials or lab identities.
     forbidden=sorted(installation_values)
     for path in source.rglob('*'):
@@ -96,7 +110,7 @@ def main():
         assert not re.search(r'Bearer\s+[A-Za-z0-9._-]{35,}|[?&]sig=[A-Za-z0-9_%+-]{20,}',data), 'Credential-like value requires review'
     record.update(state='PortableNativeSourcePrepared',portableReviewComplete=False,processingEnabledInDistributable=False,
                   nativeExportPresent=True,importableSolutionPresent=False,
-                  nativeFlowCount=2,enabledAgentToolCount=3,claimsRoleCount=1,
+                  nativeFlowCount=2,enabledAgentToolCount=3,claimsRoleCount=role_count,
                   receivingKnowledgeConfigurationRequired=True,
                   receivingImportVerified=False,
                   omittedDisabledPreviewBindings=len(retired),

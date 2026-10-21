@@ -49,6 +49,10 @@ sequenceDiagram
     end
 ```
 
+## Optional fictional portal connection
+
+The optional [fictional portal connection](portal-connection.md) extends the review worker with a durable decision queue. The existing portal independently verifies native Approval proof, current protected facts and an explicit claim binding before a version-checked fictional status change. Unbound cases retain the simulator. This connection adds no agent write tool or Azure compute service.
+
 ## Clinical policy interpretation
 
 The source guideline's Section I allows a red-flag alternative to conservative therapy. R01/R02 are scoped to conservative therapy. Their natural-language seed text remains unchanged; structured fields define the applicable path, minimum six complete weeks, two attended PT sessions in every complete week, pharmacologic coverage, indication and failed/worsening symptoms. Clinical interpretation is a human responsibility.
@@ -83,6 +87,6 @@ For the initial POC, agent sharing and flow invocation stay private to the confi
 
 Evaluation and claims operations are separate transactions. The reference uses two durable SQLite databases to test that boundary. A one-time decision reserves processing before the operation. Duplicate or conflicting decisions cannot produce a second write. After a timeout, an operation stays uncertain until a matching receipt is read back. Absence of a receipt is not permission to retry.
 
-The Dev simulator uses only protected synthetic snapshots and uniquely keyed receipts in Claim Evaluations. It does not change the Azure claims portal. Its native worker implements serialized processing, ETag reservations and explicit reconciliation states. The native escalation path was verified; the native mutation/reconciliation branch remains unexercised. A receipt is confirmed only after the intended synthetic state and matching operation are read back. No production atomicity is claimed for a multi-step cloud flow.
+The default Dev simulator uses only protected synthetic snapshots and uniquely keyed receipts in Claim Evaluations. That simulator does not change the Azure claims portal; the optional bound-case connection uses the separate portal queue described above. The native worker implements serialized processing, ETag reservations and explicit reconciliation states. The native escalation path was verified; the local simulator mutation/reconciliation branch remains unexercised natively. A receipt is confirmed only after the intended synthetic state and matching operation are read back. No production atomicity is claimed for a multi-step cloud flow.
 
 The initial native worker is deliberately single-concurrency, including its Approval wait. This limits throughput and can delay other queued cases; check expiry before dispatch and process the small POC cases sequentially. A production design needs independent review dispatch/wait and a short commit worker with per-claim concurrency controls. The local reference's parallel tests do not establish native throughput or transaction guarantees.

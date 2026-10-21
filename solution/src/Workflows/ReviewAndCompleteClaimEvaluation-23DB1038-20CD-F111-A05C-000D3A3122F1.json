@@ -244,11 +244,11 @@
                         "RequestAdditionalInformation",
                         "Escalate"
                       ],
-                      "ApprovalCreationInput/title": "@concat('SYNTHETIC POC / Simulated \u2014 ',body('Read_pending_evaluation')?['cr_claim_id'])",
+                      "ApprovalCreationInput/title": "@concat('FICTIONAL CLAIM REVIEW \u2014 ',body('Read_pending_evaluation')?['cr_claim_id'])",
                       "ApprovalCreationInput/assignedTo": "@parameters('MedicalDirectorUPN')",
                       "ApprovalCreationInput/enableNotifications": true,
                       "ApprovalCreationInput/enableReassignment": false,
-                      "ApprovalCreationInput/details": "Review the protected evaluation and evidence in Claims Review. All claims and decisions are synthetic POC records. No real claim will be changed. Missing documentation supports RequestAdditionalInformation, not automatic denial.",
+                      "ApprovalCreationInput/details": "Review protected policy, evidence, missing facts and conflicts using Claims Review. ApproveAuthorization or DenyClaim updates only an explicitly bound, allowlisted FICTIONAL portal claim after independent checks. Other examples remain in the local simulator. No real patient data or care authorization. Missing documentation requires further review, not automatic denial.",
                       "ApprovalCreationInput/itemLink": "@outputs('Protected_review_link')",
                       "ApprovalCreationInput/itemLinkDescription": "Open protected Claims Review"
                     },
@@ -541,75 +541,10 @@
                                     }
                                   }
                                 },
-                                "Expected_simulated_claim": {
-                                  "type": "Compose",
-                                  "runAfter": {
-                                    "Reserve_decision_once": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "inputs": "@setProperty(setProperty(setProperty(outputs('Authoritative_simulated_claim'),'status',if(equals(outputs('Decision'),'ApproveAuthorization'),'Authorized','Denied')),'version',add(int(outputs('Authoritative_simulated_claim')?['version']),1)),'operationId',body('Read_current_evaluation')?['cr_evaluation_id'])"
-                                },
-                                "Commit_simulated_claim_with_ETag": {
-                                  "type": "OpenApiConnection",
-                                  "runAfter": {
-                                    "Expected_simulated_claim": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "inputs": {
-                                    "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                                      "connectionName": "shared_commondataserviceforapps",
-                                      "operationId": "UpdateOnlyRecord"
-                                    },
-                                    "parameters": {
-                                      "entityName": "cr_claim_evidences",
-                                      "recordId": "@first(body('Read_current_evidence')?['value'])?['cr_claim_evidenceid']",
-                                      "If-Match": "@first(body('Read_current_evidence')?['value'])?['@odata.etag']",
-                                      "item/cr_claim_snapshot_json": "@string(outputs('Expected_simulated_claim'))"
-                                    },
-                                    "authentication": "@parameters('$authentication')",
-                                    "retryPolicy": {
-                                      "type": "none"
-                                    }
-                                  }
-                                },
-                                "Read_back_simulated_claim": {
-                                  "type": "OpenApiConnection",
-                                  "runAfter": {
-                                    "Commit_simulated_claim_with_ETag": [
-                                      "Succeeded",
-                                      "Failed",
-                                      "TimedOut"
-                                    ]
-                                  },
-                                  "inputs": {
-                                    "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                                      "connectionName": "shared_commondataserviceforapps",
-                                      "operationId": "GetItem"
-                                    },
-                                    "parameters": {
-                                      "entityName": "cr_claim_evidences",
-                                      "recordId": "@first(body('Read_current_evidence')?['value'])?['cr_claim_evidenceid']"
-                                    },
-                                    "authentication": "@parameters('$authentication')"
-                                  }
-                                },
-                                "Committed_claim": {
-                                  "type": "Compose",
-                                  "runAfter": {
-                                    "Read_back_simulated_claim": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "inputs": "@json(body('Read_back_simulated_claim')?['cr_claim_snapshot_json'])"
-                                },
-                                "Verify_persisted_simulated_receipt": {
+                                "Route_explicit_portal_binding": {
                                   "type": "If",
                                   "runAfter": {
-                                    "Committed_claim": [
+                                    "Reserve_decision_once": [
                                       "Succeeded"
                                     ]
                                   },
@@ -617,90 +552,218 @@
                                     "and": [
                                       {
                                         "equals": [
-                                          "@and(equals(outputs('Committed_claim'),outputs('Expected_simulated_claim')),equals(outputs('Committed_claim')?['synthetic'],true),equals(outputs('Committed_claim')?['operationId'],body('Read_current_evaluation')?['cr_evaluation_id']))",
+                                          "@not(empty(outputs('Authoritative_simulated_claim')?['portalBinding']))",
                                           true
                                         ]
                                       }
                                     ]
                                   },
                                   "actions": {
-                                    "Mark_confirmed_simulation": {
-                                      "type": "SetVariable",
+                                    "Read_portal_outbox_reservation": {
+                                      "type": "OpenApiConnection",
                                       "runAfter": {},
                                       "inputs": {
-                                        "name": "CompletionStatus",
-                                        "value": "SimulatedConfirmed"
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "GetItem"
+                                        },
+                                        "parameters": {
+                                          "entityName": "cr_claim_evaluations",
+                                          "recordId": "@triggerBody()?['cr_claim_evaluationid']"
+                                        },
+                                        "authentication": "@parameters('$authentication')"
+                                      }
+                                    },
+                                    "Queue_verified_fictional_portal_decision": {
+                                      "type": "OpenApiConnection",
+                                      "runAfter": {
+                                        "Read_portal_outbox_reservation": [
+                                          "Succeeded"
+                                        ]
+                                      },
+                                      "inputs": {
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "UpdateOnlyRecord"
+                                        },
+                                        "parameters": {
+                                          "entityName": "cr_claim_evaluations",
+                                          "recordId": "@triggerBody()?['cr_claim_evaluationid']",
+                                          "item/cr_state": "PortalUpdatePending",
+                                          "item/cr_evaluation_version": 5,
+                                          "item/cr_result_json": "@string(setProperty(setProperty(json(body('Read_current_evaluation')?['cr_result_json']),'status','PortalUpdatePending'),'executionMode','PortalSynthetic'))",
+                                          "item/cr_review_summary": "@concat('FICTIONAL PORTAL CLAIM. Verified human decision: ',outputs('Decision'),'. Awaiting protected portal update and receipt. ',body('Read_current_evaluation')?['cr_review_summary'])"
+                                        },
+                                        "authentication": "@parameters('$authentication')",
+                                        "retryPolicy": {
+                                          "type": "none"
+                                        }
                                       }
                                     }
-                                  }
-                                },
-                                "Durable_mutation_receipt": {
-                                  "type": "Compose",
-                                  "runAfter": {
-                                    "Verify_persisted_simulated_receipt": [
-                                      "Succeeded"
-                                    ]
                                   },
-                                  "inputs": {
-                                    "status": "@variables('CompletionStatus')",
-                                    "mode": "Simulated",
-                                    "authorizationGranted": false,
-                                    "operationId": "@body('Read_current_evaluation')?['cr_evaluation_id']",
-                                    "claimId": "@body('Read_current_evaluation')?['cr_claim_id']",
-                                    "expectedVersion": "@body('Read_current_evaluation')?['cr_claim_version']",
-                                    "persistedClaim": "@outputs('Committed_claim')",
-                                    "reviewerObjectId": "@outputs('Authenticated_response')?['responder']?['id']",
-                                    "approvalId": "@body('Read_current_evaluation')?['cr_approval_id']",
-                                    "realClaimWriteCount": 0,
-                                    "simulatedClaimWriteCount": "@if(equals(variables('CompletionStatus'),'SimulatedConfirmed'),1,0)"
-                                  }
-                                },
-                                "Read_completion_reservation": {
-                                  "type": "OpenApiConnection",
-                                  "runAfter": {
-                                    "Durable_mutation_receipt": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "inputs": {
-                                    "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                                      "connectionName": "shared_commondataserviceforapps",
-                                      "operationId": "GetItem"
-                                    },
-                                    "parameters": {
-                                      "entityName": "cr_claim_evaluations",
-                                      "recordId": "@triggerBody()?['cr_claim_evaluationid']"
-                                    },
-                                    "authentication": "@parameters('$authentication')"
-                                  }
-                                },
-                                "Record_verified_completion": {
-                                  "type": "OpenApiConnection",
-                                  "runAfter": {
-                                    "Read_completion_reservation": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "inputs": {
-                                    "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                                      "connectionName": "shared_commondataserviceforapps",
-                                      "operationId": "UpdateOnlyRecord"
-                                    },
-                                    "parameters": {
-                                      "entityName": "cr_claim_evaluations",
-                                      "recordId": "@triggerBody()?['cr_claim_evaluationid']",
-                                      "If-Match": "@body('Read_completion_reservation')?['@odata.etag']",
-                                      "item/cr_state": "@variables('CompletionStatus')",
-                                      "item/cr_receipt_json": "@string(outputs('Durable_mutation_receipt'))",
-                                      "item/cr_result_json": "@string(outputs('Durable_mutation_receipt'))",
-                                      "item/cr_evaluation_version": 5,
-                                      "item/cr_review_summary": "@concat('SYNTHETIC POC / Simulated. Human decision: ',outputs('Decision') ,'. Completion: ',variables('CompletionStatus'),'. Real claim writes: 0.')"
-                                    },
-                                    "authentication": "@parameters('$authentication')",
-                                    "retryPolicy": {
-                                      "type": "none"
+                                  "else": {
+                                    "actions": {
+                                      "Expected_simulated_claim": {
+                                        "type": "Compose",
+                                        "runAfter": {},
+                                        "inputs": "@setProperty(setProperty(setProperty(outputs('Authoritative_simulated_claim'),'status',if(equals(outputs('Decision'),'ApproveAuthorization'),'Authorized','Denied')),'version',add(int(outputs('Authoritative_simulated_claim')?['version']),1)),'operationId',body('Read_current_evaluation')?['cr_evaluation_id'])"
+                                      },
+                                      "Commit_simulated_claim_with_ETag": {
+                                        "type": "OpenApiConnection",
+                                        "runAfter": {
+                                          "Expected_simulated_claim": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                            "connectionName": "shared_commondataserviceforapps",
+                                            "operationId": "UpdateOnlyRecord"
+                                          },
+                                          "parameters": {
+                                            "entityName": "cr_claim_evidences",
+                                            "recordId": "@first(body('Read_current_evidence')?['value'])?['cr_claim_evidenceid']",
+                                            "If-Match": "@first(body('Read_current_evidence')?['value'])?['@odata.etag']",
+                                            "item/cr_claim_snapshot_json": "@string(outputs('Expected_simulated_claim'))"
+                                          },
+                                          "authentication": "@parameters('$authentication')",
+                                          "retryPolicy": {
+                                            "type": "none"
+                                          }
+                                        }
+                                      },
+                                      "Read_back_simulated_claim": {
+                                        "type": "OpenApiConnection",
+                                        "runAfter": {
+                                          "Commit_simulated_claim_with_ETag": [
+                                            "Succeeded",
+                                            "Failed",
+                                            "TimedOut"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                            "connectionName": "shared_commondataserviceforapps",
+                                            "operationId": "GetItem"
+                                          },
+                                          "parameters": {
+                                            "entityName": "cr_claim_evidences",
+                                            "recordId": "@first(body('Read_current_evidence')?['value'])?['cr_claim_evidenceid']"
+                                          },
+                                          "authentication": "@parameters('$authentication')"
+                                        }
+                                      },
+                                      "Committed_claim": {
+                                        "type": "Compose",
+                                        "runAfter": {
+                                          "Read_back_simulated_claim": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": "@json(body('Read_back_simulated_claim')?['cr_claim_snapshot_json'])"
+                                      },
+                                      "Verify_persisted_simulated_receipt": {
+                                        "type": "If",
+                                        "runAfter": {
+                                          "Committed_claim": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "expression": {
+                                          "and": [
+                                            {
+                                              "equals": [
+                                                "@and(equals(outputs('Committed_claim'),outputs('Expected_simulated_claim')),equals(outputs('Committed_claim')?['synthetic'],true),equals(outputs('Committed_claim')?['operationId'],body('Read_current_evaluation')?['cr_evaluation_id']))",
+                                                true
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "actions": {
+                                          "Mark_confirmed_simulation": {
+                                            "type": "SetVariable",
+                                            "runAfter": {},
+                                            "inputs": {
+                                              "name": "CompletionStatus",
+                                              "value": "SimulatedConfirmed"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "Durable_mutation_receipt": {
+                                        "type": "Compose",
+                                        "runAfter": {
+                                          "Verify_persisted_simulated_receipt": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "status": "@variables('CompletionStatus')",
+                                          "mode": "Simulated",
+                                          "authorizationGranted": false,
+                                          "operationId": "@body('Read_current_evaluation')?['cr_evaluation_id']",
+                                          "claimId": "@body('Read_current_evaluation')?['cr_claim_id']",
+                                          "expectedVersion": "@body('Read_current_evaluation')?['cr_claim_version']",
+                                          "persistedClaim": "@outputs('Committed_claim')",
+                                          "reviewerObjectId": "@outputs('Authenticated_response')?['responder']?['id']",
+                                          "approvalId": "@body('Read_current_evaluation')?['cr_approval_id']",
+                                          "realClaimWriteCount": 0,
+                                          "simulatedClaimWriteCount": "@if(equals(variables('CompletionStatus'),'SimulatedConfirmed'),1,0)"
+                                        }
+                                      },
+                                      "Read_completion_reservation": {
+                                        "type": "OpenApiConnection",
+                                        "runAfter": {
+                                          "Durable_mutation_receipt": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                            "connectionName": "shared_commondataserviceforapps",
+                                            "operationId": "GetItem"
+                                          },
+                                          "parameters": {
+                                            "entityName": "cr_claim_evaluations",
+                                            "recordId": "@triggerBody()?['cr_claim_evaluationid']"
+                                          },
+                                          "authentication": "@parameters('$authentication')"
+                                        }
+                                      },
+                                      "Record_verified_completion": {
+                                        "type": "OpenApiConnection",
+                                        "runAfter": {
+                                          "Read_completion_reservation": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                            "connectionName": "shared_commondataserviceforapps",
+                                            "operationId": "UpdateOnlyRecord"
+                                          },
+                                          "parameters": {
+                                            "entityName": "cr_claim_evaluations",
+                                            "recordId": "@triggerBody()?['cr_claim_evaluationid']",
+                                            "If-Match": "@body('Read_completion_reservation')?['@odata.etag']",
+                                            "item/cr_state": "@variables('CompletionStatus')",
+                                            "item/cr_receipt_json": "@string(outputs('Durable_mutation_receipt'))",
+                                            "item/cr_result_json": "@string(outputs('Durable_mutation_receipt'))",
+                                            "item/cr_evaluation_version": 5,
+                                            "item/cr_review_summary": "@concat('SYNTHETIC POC / Simulated. Human decision: ',outputs('Decision') ,'. Completion: ',variables('CompletionStatus'),'. Real claim writes: 0.')"
+                                          },
+                                          "authentication": "@parameters('$authentication')",
+                                          "retryPolicy": {
+                                            "type": "none"
+                                          }
+                                        }
+                                      }
                                     }
                                   }
                                 }

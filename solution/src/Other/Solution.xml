@@ -6,7 +6,7 @@
       <LocalizedName description="Zava Medical Claims Concierge" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.0</Version>
+    <Version>1.0.0.1</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>Zava</UniqueName>
@@ -82,6 +82,7 @@
       <RootComponent type="1" schemaName="cr_claim_evidence" behavior="0" />
       <RootComponent type="1" schemaName="cr_medical_policy_rules" behavior="0" />
       <RootComponent type="20" id="{5871434f-25cd-f111-a05a-000d3a5ce196}" behavior="0" />
+      <RootComponent type="20" id="{cdb64b91-7dcd-f111-a05a-0022480869b0}" behavior="0" />
       <RootComponent type="29" id="{23db1038-20cd-f111-a05c-000d3a3122f1}" behavior="0" />
       <RootComponent type="29" id="{4fcf9742-1ccd-f111-a05a-000d3a33def5}" behavior="0" />
       <RootComponent type="62" schemaName="cr_ClaimsReview" behavior="0" />

@@ -1,13 +1,25 @@
 {
   "$kind": "BotConfiguration",
+  "channels": [
+    {
+      "$kind": "ChannelDefinition",
+      "channelId": "MsTeams"
+    },
+    {
+      "$kind": "ChannelDefinition",
+      "channelId": "Microsoft365Copilot"
+    }
+  ],
   "settings": {
     "GenerativeActionsEnabled": true
   },
   "isAgentConnectable": false,
+  "publishOnImport": false,
   "gPTSettings": {
     "$kind": "GPTSettings",
     "defaultSchemaName": "cr_ZavaMedicalClaimsConcierge.gpt.default"
   },
+  "isLightweightBot": false,
   "aISettings": {
     "$kind": "AISettings",
     "useModelKnowledge": false,
@@ -18,5 +30,6 @@
   },
   "recognizer": {
     "$kind": "GenerativeAIRecognizer"
-  }
+  },
+  "deferredProvisioning": false
 }

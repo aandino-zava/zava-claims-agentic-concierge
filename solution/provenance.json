@@ -7,12 +7,14 @@
   "state": "NativePackageBuilt",
   "nativeFlowCount": 2,
   "enabledAgentToolCount": 3,
-  "claimsRoleCount": 1,
+  "claimsRoleCount": 2,
   "receivingKnowledgeConfigurationRequired": true,
   "receivingImportVerified": false,
   "dependencyReview": "Standard AppModuleWebResources and PowerAppsAppFramework packages required in receiving Dev",
-  "portableTreeSha256": "fd82109a80a91c95253a0446ce588edbc11333883846ceb5f855089b81a59434",
-  "packageSha256": "1d8e25b110c96d0a335067f28c2492784f7719e15690fa6c14760d8dbcf3632d",
-  "checkerStatus": "Finished",
-  "checkerFindings": 0
+  "portableTreeSha256": "1a6cae79c6a58e4e4ad97ca55942d9481f46beb8f2b47adb41989e601c824ced",
+  "rawExportSha256": "9bb660ec7316a506fcddb554d07d07205e20e125493e003ca3d1181d44931393",
+  "omittedDisabledPreviewBindings": 0,
+  "checkerStatus": "NotRunForThisPackage",
+  "checkerFindings": null,
+  "packageSha256": "538bc96f38cc0c4f325b30cbcb1b7773ce1dc4be2557a3d1afac7af708585736"
 }

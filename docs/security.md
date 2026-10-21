@@ -2,6 +2,8 @@
 
 The POC demonstrates enforcement boundaries with fictional data. It does not substantiate HIPAA compliance or production readiness.
 
+The optional [portal connection](portal-connection.md) permits status changes only to explicitly allowlisted fictional portal claims. The portal's managed identity reads protected Dataverse evaluations, evidence, policy and actual native Approval responses, then records completion. It has no policy, evidence or Approval editing rights. The portal owns the version-checked status update and durable receipt; the agent receives no portal write tool. This does not enable real patient data or care authorization.
+
 | Boundary | Control | Required native evidence |
 |---|---|---|
 | Agent entry | Microsoft authentication; private POC audience; anonymous channels disabled | Authorized sign-in and rejected unauthorized access |

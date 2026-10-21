@@ -1,5 +1,6 @@
 <botcomponent schemaname="cr_ZavaMedicalClaimsConcierge.gpt.default">
   <componenttype>15</componenttype>
+  <description>Zava Medical Claims Concierge is a secure proof-of-concept agent for evaluating authorized synthetic medical claims against protected claim evidence and applicable clinical policy. It retrieves claim-specific evidence, identifies missing or conflicting documentation, applies structured policy criteria, and submits a controlled recommendation to the Gatekeeper for human review. The agent does not approve or deny claims, alter source records, or substitute for a Medical Director</description>
   <iscustomizable>0</iscustomizable>
   <name>Zava Medical Claims Concierge</name>
   <parentbotid>

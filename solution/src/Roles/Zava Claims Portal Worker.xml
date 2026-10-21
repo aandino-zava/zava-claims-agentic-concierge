@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Role id="{cdb64b91-7dcd-f111-a05a-0022480869b0}" name="Zava Claims Portal Worker" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <IsCustomizable>1</IsCustomizable>
+  <IsAutoAssigned>0</IsAutoAssigned>
+  <AppliesTo>Existing claims portal managed identity in Dev</AppliesTo>
+  <Description>Reads protected fictional claim evaluations, evidence, policy and native approval proof; records portal completion receipts.</Description>
+  <SummaryOfCoreTablePermissions>Read claims policy, evidence and approvals. Read and update evaluation completion. No policy, evidence or approval writes.</SummaryOfCoreTablePermissions>
+  <RolePrivileges>
+    <RolePrivilege name="prvCreateSharePointData" level="Global" />
+    <RolePrivilege name="prvReadcr_claim_evaluation" level="Global" />
+    <RolePrivilege name="prvReadcr_claim_evidence" level="Global" />
+    <RolePrivilege name="prvReadcr_medical_policy_rules" level="Global" />
+    <RolePrivilege name="prvReadmsdyn_flow_approval" level="Global" />
+    <RolePrivilege name="prvReadmsdyn_flow_approvalresponse" level="Global" />
+    <RolePrivilege name="prvReadPluginAssembly" level="Global" />
+    <RolePrivilege name="prvReadPluginType" level="Global" />
+    <RolePrivilege name="prvReadSdkMessage" level="Global" />
+    <RolePrivilege name="prvReadSdkMessageProcessingStep" level="Global" />
+    <RolePrivilege name="prvReadSdkMessageProcessingStepImage" level="Global" />
+    <RolePrivilege name="prvReadSharePointData" level="Global" />
+    <RolePrivilege name="prvReadSharePointDocument" level="Global" />
+    <RolePrivilege name="prvWritecr_claim_evaluation" level="Global" />
+    <RolePrivilege name="prvWriteSharePointData" level="Global" />
+  </RolePrivileges>
+</Role>

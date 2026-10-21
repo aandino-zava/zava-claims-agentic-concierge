@@ -100,6 +100,8 @@ def main():
                        if 'cr_claim_' in p.attrib['name'] or 'cr_medical_policy_' in p.attrib['name'] or 'msdyn_flow_approval' in p.attrib['name']}
         assert worker_claims=={**claims_privileges,'prvWritecr_claim_evaluation':'Global',
             'prvReadmsdyn_flow_approval':'Global','prvReadmsdyn_flow_approvalresponse':'Global'}, 'Unexpected portal-worker claims or Approval permission'
+        worker_privileges={p.attrib['name']:p.attrib['level'] for p in worker_root.findall('./RolePrivileges/RolePrivilege')}
+        assert all(worker_privileges.get(name)=='Global' for name in ['prvReadEntity','prvReadAttribute','prvReadRelationship']), 'Portal SDK requires read-only table, column and relationship metadata access'
     # Reject rather than silently rewrite unknown credentials or lab identities.
     forbidden=sorted(installation_values)
     for path in source.rglob('*'):

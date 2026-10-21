@@ -15,7 +15,7 @@ The agent never receives a portal write tool. Azure AI Search remains a source o
 ## What the receiving installation supplies
 
 - The optional portal connection from the [portal setup guide](https://github.com/aandino-zava/zava-health-claims-portal/blob/main/docs/CLAIMS_CONCIERGE.md), using App Service with Always On.
-- An application user for the existing portal managed identity, assigned the dedicated **Zava Claims Portal Worker** role. It can read the three claims tables and native Approval/response records, and update evaluation completion. It cannot change policy, evidence or Approval records.
+- An application user for the existing portal managed identity, assigned the dedicated **Zava Claims Portal Worker** role. It can read the three claims tables and native Approval/response records, and update evaluation completion. The SDK also needs the role's read-only table, column and relationship definition access. It cannot change policy, evidence or Approval records.
 - The configured Medical Director's Entra object ID and Dataverse user ID, and an explicit list of allowed fictional portal claim IDs.
 - A protected `portalBinding` in the claim snapshot, containing the exact portal `claimId`, `memberId`, `cptCode`, `serviceDate`, `version`, `status` and `synthetic` flag. An authorized evidence maintainer creates this binding before evaluation.
 

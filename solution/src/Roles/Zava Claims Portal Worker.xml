@@ -7,13 +7,16 @@
   <SummaryOfCoreTablePermissions>Read claims policy, evidence and approvals. Read and update evaluation completion. No policy, evidence or approval writes.</SummaryOfCoreTablePermissions>
   <RolePrivileges>
     <RolePrivilege name="prvCreateSharePointData" level="Global" />
+    <RolePrivilege name="prvReadAttribute" level="Global" />
     <RolePrivilege name="prvReadcr_claim_evaluation" level="Global" />
     <RolePrivilege name="prvReadcr_claim_evidence" level="Global" />
     <RolePrivilege name="prvReadcr_medical_policy_rules" level="Global" />
+    <RolePrivilege name="prvReadEntity" level="Global" />
     <RolePrivilege name="prvReadmsdyn_flow_approval" level="Global" />
     <RolePrivilege name="prvReadmsdyn_flow_approvalresponse" level="Global" />
     <RolePrivilege name="prvReadPluginAssembly" level="Global" />
     <RolePrivilege name="prvReadPluginType" level="Global" />
+    <RolePrivilege name="prvReadRelationship" level="Global" />
     <RolePrivilege name="prvReadSdkMessage" level="Global" />
     <RolePrivilege name="prvReadSdkMessageProcessingStep" level="Global" />
     <RolePrivilege name="prvReadSdkMessageProcessingStepImage" level="Global" />

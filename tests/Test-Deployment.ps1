@@ -33,11 +33,13 @@ try {
     Write-TestConfig $configuration
     $valid = Read-ClaimsConfiguration $testFile
     Assert-True ($valid.mode -eq 'Simulated') 'Valid config'
+    $copy=$configuration.Clone(); $copy.claimsApiBaseUrl=''; Write-TestConfig $copy
+    Assert-True ((Read-ClaimsConfiguration $testFile).claimsApiBaseUrl -eq '') 'No live API required for simulation'
     $plan = New-ClaimsDeploymentPlan $valid
     Assert-True ($plan.environmentUrl -eq $valid.environmentUrl -and $plan.operations.Count -eq 10) 'Plan target and operations'
     foreach ($change in @(@('deploymentScope','Production'),@('mode','Live'),@('allowLiveClaimsWrites',$true),@('processingEnabled',$true),
         @('environmentUrl','http://orgpoc.crm.dynamics.com'),@('searchEndpoint','https://search-poc.search.windows.net.attacker.test'),
-        @('tenantId','not-a-guid'),@('publisherPrefix','x'),@('medicalDirectorUpn','invalid'))) {
+        @('claimsApiBaseUrl','http://claims-poc.azurewebsites.net'),@('tenantId','not-a-guid'),@('publisherPrefix','x'),@('medicalDirectorUpn','invalid'))) {
         $copy = $configuration.Clone(); $copy[$change[0]]=$change[1]; Write-TestConfig $copy
         Assert-Throws { Read-ClaimsConfiguration $testFile } ('Reject '+$change[0])
     }

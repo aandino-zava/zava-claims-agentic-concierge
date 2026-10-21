@@ -23,7 +23,6 @@
   "connections": {
     "Dataverse": "",
     "AzureAISearch": "",
-    "Approvals": "",
-    "Teams": ""
+    "Approvals": ""
   }
 }

@@ -1,4 +1,4 @@
-name: Validate local behavior
+name: Validate solution
 on:
   push:
   pull_request:

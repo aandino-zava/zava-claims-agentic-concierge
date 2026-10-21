@@ -10,5 +10,11 @@ work/
 artifacts/
 solution/raw/
 agent/native/
+outputs/
+evidence/
+recordings/
+*.har
+*.log
+*.sarif
 solution/*.zip
 !solution/provenance.json

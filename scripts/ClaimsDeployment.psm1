@@ -23,7 +23,7 @@ function Read-ClaimsConfiguration {
     if ($cfg.medicalDirectorObjectId -eq $cfg.unauthorizedTestObjectId) { throw 'The negative-test identity must differ from the reviewer.' }
     if ($cfg.environmentUrl -notmatch '^https://[a-z0-9-]+\.crm[0-9]*\.dynamics\.com/?$') { throw 'Expected a Dataverse HTTPS organization URL.' }
     if ($cfg.searchEndpoint -notmatch '^https://[a-z0-9-]+\.search\.windows\.net/?$') { throw 'Expected an Azure AI Search HTTPS endpoint.' }
-    if ($cfg.claimsApiBaseUrl -notmatch '^https://[a-z0-9-]+\.azurewebsites\.net/?$') { throw 'Expected an App Service HTTPS API base URL.' }
+    if ($cfg.claimsApiBaseUrl -and $cfg.claimsApiBaseUrl -notmatch '^https://[a-z0-9-]+\.azurewebsites\.net/?$') { throw 'Expected an App Service HTTPS API base URL.' }
     if ($cfg.medicalDirectorUpn -notmatch '^[^\s@]+@[^\s@]+$') { throw 'Invalid reviewer UPN.' }
     if ($cfg.publisherPrefix -notmatch '^[a-z][a-z0-9]{1,7}$') { throw 'Publisher prefix must contain 2-8 lowercase letters/digits.' }
     foreach ($key in @('publisherUniqueName','solutionUniqueName')) {
@@ -72,26 +72,26 @@ function Assert-ClaimsAuditEnabled {
 function New-ClaimsDeploymentPlan {
     param([hashtable]$Configuration)
     return [ordered]@{
-        kind = 'InitialDevAuthoring'; environment = $Configuration.environmentDisplayName
+        kind = 'SolutionDeployment'; environment = $Configuration.environmentDisplayName
         environmentUrl = $Configuration.environmentUrl; environmentId = $Configuration.environmentId
         organizationId = $Configuration.organizationId; tenantId = $Configuration.tenantId
         solution = $Configuration.solutionUniqueName; publisherPrefix = $Configuration.publisherPrefix
         medicalDirector = $Configuration.medicalDirectorUpn; medicalDirectorObjectId = $Configuration.medicalDirectorObjectId
         unauthorizedTestObjectId = $Configuration.unauthorizedTestObjectId; claimsMode = 'Simulated'
         operations = @(
-            'Create the dedicated Zava publisher and unmanaged claims solution.'
-            'Create three audited tables and alternate keys from dataverse/schema.json; seed the three approved policy rules.'
-            'Load eight clearly marked synthetic evidence/claim snapshots and supporting source bodies. SyntheticFixture is not a human attestation.'
-            'Enable organization auditing and auditing on these claims tables/columns; retain unrelated configuration.'
-            'Create scoped claims roles and configuration; keep policy/evidence writes out of agent tools. Do not add the negative-test account to Dev.'
-            'Create solution environment variables and connection references for Dataverse, Azure AI Search and native Approvals, using authorized sign-ins. Approvals supplies Teams notifications.'
-            'Author the private authenticated agent, its three tools, two native flows and a small native Claims Review app/form for protected readable evidence.'
-            'Test the native Search connection. If Entra document access still fails, stop that integration and report the separately scoped Azure role requirement.'
-            'Enable only the claims POC runtime for authorized Dev testing, verify negative paths and capture screenshots. Export distributable processing off.'
-            'Export/unpack the genuine solution, reconcile portability and bindings, pack/check it, and record provenance and acceptance evidence.'
+            'Validate the exact Development target and authorized connections.'
+            'Build or download the reviewed unmanaged solution and verify its checksum.'
+            'Run Power Apps Checker on the package selected for import.'
+            'Import that package and bind its connection references.'
+            'Configure target flow parameters and Search mapping with processing off.'
+            'Enable and verify organization auditing without changing retention.'
+            'Add missing policy and fictional evidence rows without overwriting changes.'
+            'Assign and verify the Medical Director role and private agent audience.'
+            'Verify native tools, protected review links and Search access.'
+            'Enable simulation and publish the agent for controlled native acceptance.'
         )
         excluded = @('Azure resources/role assignments/app registrations','real claims writes','UAT/Test/Production deployment','GitHub publication','messages to other lab users')
-        permissionStatus = 'Requires separate user approval before any Dev mutation'
+        permissionStatus = 'Import and Bootstrap require a matching ApprovedEnvironmentUrl'
     }
 }
 

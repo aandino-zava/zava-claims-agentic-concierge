@@ -1,6 +1,6 @@
 # Architecture and approved decisions
 
-The approved POC uses the existing Azure AI Search/Storage/Foundry deployment, Copilot Studio, Dataverse and Power Automate. It adds no Azure compute service. The local implementation is a reproducible oracle for the native flow behavior; it is not a second production Gatekeeper.
+The solution uses Copilot Studio, Dataverse, Power Automate and an existing Azure AI Search index. It adds no Azure compute service. A local Python reference supports automated checks; the deployed Gatekeeper runs in Power Automate.
 
 ```mermaid
 flowchart LR
@@ -67,7 +67,7 @@ The protected evidence table holds source bodies, ingestion hashes, a source ver
 
 A small native Claims Review model-driven app/form presents readable evidence and evaluation summaries, policy requirements and protected source records. Native Approvals links to that review context. The app reuses the same tables and roles and adds no service or business-data copy. The app is published and its running locked evidence/evaluation forms were verified in Dev. The local report remains separate reference evidence.
 
-`SyntheticFixture` is a distinct verification state, never an assertion that a real clinician signed those facts. `ClinicianVerified` requires a recorded actual verifier. The local harness supplies simulated identity contexts. Native acceptance must use genuine authenticated tool and Approval output.
+`SyntheticFixture` is a distinct verification state, never an assertion that a real clinician signed those facts. `ClinicianVerified` requires a recorded actual verifier. The local test code supplies simulated identity contexts. Native acceptance must use genuine authenticated tool and Approval output.
 
 ## Schema and rule semantics
 
@@ -85,4 +85,4 @@ Evaluation and claims operations are separate transactions. The reference uses t
 
 The Dev simulator uses only protected synthetic snapshots and uniquely keyed receipts in Claim Evaluations. It does not change the Azure claims portal. Its native worker implements serialized processing, ETag reservations and explicit reconciliation states. The native escalation path was verified; the native mutation/reconciliation branch remains unexercised. A receipt is confirmed only after the intended synthetic state and matching operation are read back. No production atomicity is claimed for a multi-step cloud flow.
 
-The initial native worker is deliberately single-concurrency, including its Approval wait. This limits throughput and can delay other queued cases; check expiry before dispatch and process the small POC cases sequentially. A production design needs independent review dispatch/wait and a short commit worker with per-claim concurrency controls. The local oracle's parallel tests do not establish native throughput or transaction guarantees.
+The initial native worker is deliberately single-concurrency, including its Approval wait. This limits throughput and can delay other queued cases; check expiry before dispatch and process the small POC cases sequentially. A production design needs independent review dispatch/wait and a short commit worker with per-claim concurrency controls. The local reference's parallel tests do not establish native throughput or transaction guarantees.

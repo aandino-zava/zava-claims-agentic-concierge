@@ -1,4 +1,4 @@
-"""Deterministic policy semantics, shared by the local oracle and flow design."""
+"""Deterministic policy semantics, shared by the local reference and flow design."""
 import hashlib
 import json
 from collections import Counter

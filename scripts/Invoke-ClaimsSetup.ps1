@@ -13,7 +13,7 @@ if ($Operation -eq 'Configure') {
     $pacExecutable = Resolve-ClaimsPac $PacPath
     Invoke-ClaimsPac $pacExecutable @('env','list') | Write-Host
     foreach ($key in @('environmentDisplayName','environmentId','environmentUrl','organizationId','tenantId',
-        'medicalDirectorObjectId','medicalDirectorUpn','unauthorizedTestObjectId','searchEndpoint','searchIndex','searchSemanticConfiguration','claimsApiBaseUrl')) {
+        'medicalDirectorObjectId','medicalDirectorUpn','unauthorizedTestObjectId','searchEndpoint','searchIndex','searchSemanticConfiguration')) {
         $config[$key] = Read-Host $key
     }
     foreach ($connector in @('Dataverse','AzureAISearch','Approvals')) {
@@ -44,7 +44,7 @@ switch ($Operation) {
         if ($LASTEXITCODE -ne 0) { throw 'Dataverse bootstrap failed; inspect scoped partial state before retry.' }
         & $PythonPath (Join-Path $PSScriptRoot 'seed_fixtures.py') --config $ConfigPath --execute --approved-environment $ApprovedEnvironmentUrl
         if ($LASTEXITCODE -ne 0) { throw 'Synthetic fixture import failed; existing rows were preserved.' }
-        Write-Host 'Schema/seed bootstrap finished. Complete the approved native agent/flow/role authoring plan before export.'
+        Write-Host 'Policy and fictional sample data are ready. Verify reviewer access and the imported components before activation.'
     }
     'Export' { Export-ClaimsNativeSolution $cfg $pacExecutable }
     'Pack' { New-ClaimsNativePackage $cfg $pacExecutable }

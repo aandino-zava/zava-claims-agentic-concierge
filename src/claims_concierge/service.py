@@ -10,7 +10,7 @@ from .repositories import EvaluationStore
 
 
 class Gatekeeper:
-    """Local oracle for the approved Power Automate design; never a deployed API."""
+    """Local reference for the approved Power Automate design; never a deployed API."""
     def __init__(self, tenant_id, reviewers, requesters, repository, store, claims, now=None):
         self.tenant_id = tenant_id
         self.reviewers, self.requesters = frozenset(reviewers), frozenset(requesters)

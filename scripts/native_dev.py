@@ -78,7 +78,7 @@ def main():
         # A solution import transports definitions; explicit target configuration
         # materializes environment parameters without enabling processing.
         import re
-        from build_native_flows import environment_parameters
+        from flow_parameters import environment_parameters
         semantic=cfg.get('searchSemanticConfiguration','')
         if cfg['publisherPrefix']!='cr' or not re.fullmatch(r'[a-z0-9][a-z0-9-]*',cfg['searchIndex']):
             raise ValueError('Expected the exported cr package and a valid receiving Search index name')

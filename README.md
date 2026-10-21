@@ -1,6 +1,6 @@
 # Zava Medical Claims Concierge
 
-A Copilot Studio solution for reviewing fictional lumbar MRI claims against a versioned medical policy. The agent gathers context, Power Automate checks the protected facts, and a Medical Director records the decision.
+A Copilot Studio solution for reviewing fictional medical insurance claims against a versioned medical policy. The agent gathers context, Power Automate checks the protected facts, and a Medical Director records the decision.
 
 **Start with the [deployment guide](docs/deployment.md).** It covers configuration, package import, reviewer access and activation. All claim operations remain simulated.
 

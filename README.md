@@ -20,7 +20,18 @@ flowchart LR
     Review -->|Verified decision only| Simulator[Claims simulator]
 ```
 
-The Gatekeeper is the controlled flow that checks the policy and evidence independently of the agent. Retrieved documents and model output cannot authorize a claim change. The review worker checks the actual Approval responder before recording a decision or attempting a simulated operation.
+## The Gatekeeper pattern
+
+The agent can gather context, propose an evaluation and explain the result. Authority to act stays in controlled Power Automate flows. This keeps business protections outside the model's instructions, where prompt injection or inconsistent reasoning could otherwise affect a decision.
+
+The design separates four responsibilities:
+
+- **Policy and evidence in Dataverse.** Versioned rules and protected evidence live outside the prompt. Search results supply context; a citation alone does not establish a clinical fact or grant permission.
+- **Coordination in Copilot Studio.** The agent has read tools and one evaluation-submission tool. It cannot edit policy, change protected evidence or directly update a claim.
+- **Independent checks in the Gatekeeper.** The evaluation flow reads the authoritative rules, claim snapshot and evidence itself, validates their bindings and applies fixed policy checks. It records the outcome in a durable Claim Evaluation. Missing or contradictory evidence cannot authorize approval; passing the checks establishes eligibility for human review.
+- **Human decision and controlled execution.** The separate review worker verifies the actual Approval responder against the assigned, configured Medical Director. Before a simulated operation, it rechecks policy, evidence and claim versions. Duplicate protection and receipt readback govern what can be reported as completed.
+
+The reusable pattern is: **AI coordinates and explains; a controlled process enforces the rules and owns the write.** In this solution, that process also requires an authenticated human decision. All claims operations remain simulated; see the [architecture](docs/architecture.md) for the execution boundary and POC limitations.
 
 ## What is included
 

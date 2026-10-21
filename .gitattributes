@@ -1,2 +1,13 @@
 # Preserve the reviewed native source digest on every checkout.
 /solution/src/** -text
+
+# Show native Power Platform definitions in GitHub's language statistics.
+# Keep their actual XML/JSON classification and syntax highlighting.
+/solution/src/**/*.xml linguist-detectable=true
+/solution/src/**/*.json linguist-detectable=true
+
+# Supporting setup tools, local reference code and tests remain fully browsable.
+# Exclude them from the language bar without hiding diffs or changing execution.
+/scripts/** linguist-detectable=false
+/src/claims_concierge/** linguist-detectable=false
+/tests/** linguist-detectable=false

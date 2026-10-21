@@ -1,0 +1,26 @@
+# Security and governance
+
+The POC demonstrates enforcement boundaries with fictional data. It does not substantiate HIPAA compliance or production readiness.
+
+| Boundary | Control | Required native evidence |
+|---|---|---|
+| Agent entry | Microsoft authentication; private POC audience; anonymous channels disabled | Authorized sign-in and rejected unauthorized access |
+| Agent tools | User-authenticated read tools; no policy/evidence or claims write tools | Tool credentials, sharing and effective role verification |
+| Evaluation action | Strict JSON, private flow invocation, independent rule/evidence reads | Platform-trigger/access tests; no identity taken from JSON |
+| Evidence | Protected source bodies, source version, hashes at ingestion, content/fact comparisons | Tampering and stale-source tests under actual Dataverse permissions |
+| Policy | Structured rule kinds, effective versions, mandatory coverage and restricted writers | Three seeds, alternate keys, R03 null/false semantics and audit records |
+| Medical review | Actual Approval responder object ID/tenant, configured MD allowlist, assignment, approval ID and expiry | Native authenticated escalation captured; full negative matrix remains local |
+| Claims | Simulated adapter only; expected version; one-time operation and receipt readback | Confirmed simulator receipt and no Azure portal mutation |
+| Delivery | Explicit Dev target, checksum, native provenance, processing off | Native export/pack/check and post-import state verification |
+
+The deployed `Zava Claims Medical Director` role has native App Opener privileges and organization Read on the three claims tables. It grants no claims-specific create, write or delete privileges. It was assigned and read back for the designated owner. Agent read tools use the caller's connection and fixed table/filter/column projections; the submission tool invokes only the Gatekeeper.
+
+The worker uses the trusted owner's existing connection in this private POC. The owner retains existing System Administrator privileges. The worker independently checks the configured MD allowlist and actual Approval responder, but it does not perform a fresh Dataverse security-role lookup at decision time. A dedicated worker identity, evidence/policy administrator roles and independent reviewer authorization are production requirements, not implemented least-privilege claims. A selected lab account remains outside Dev; its actual sign-in was not tested.
+
+Organization and claims table/column auditing were enabled under the approved Dev plan. Audit retention is a tenant governance decision; do not silently change the existing retention setting. The synthetic build kept readable diagnostics for its screenshots. Before real clinical use, secure sensitive flow inputs/outputs and restrict run-history/transcript access. Do not treat application result rows as immutable audit storage when administrators can update them.
+
+Teams notification content is limited to a synthetic claim alias, evaluation state and protected review link. Clinical evidence, medication details and member identity belong in the authorized review context. Only the user's own account receives POC approvals; selecting another lab identity for negative testing does not authorize sending it messages or granting access.
+
+The observed claims API requires `Claims.Reviewer`, a client allowlist and optimistic claim versioning. It has no dedicated Medical Director decision proof or idempotency key. Giving an automation account a reviewer role would not establish a human decision. No live write path is implemented here; the adapter deliberately refuses construction.
+
+Production work must address evidence-source authority and clinical attestation, patient-level authorization, narrow runtime identities, independent reviewer access, clinical exceptions/overrides, reliable idempotency at the system of record, durable transaction reconciliation, privacy/retention requirements, monitoring and incident response, accessibility, recovery, and validated deployment into a separate controlled lifecycle. Do not reuse the private single-owner POC sharing model as a multi-user authorization design.

@@ -1,0 +1,69 @@
+name: Deploy checked artifact to approved Dev
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful Build native solution run ID for this exact commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+concurrency:
+  group: claims-dev-tenant-operation
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment: claims-dev
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      CHECKED_RUN_ID: ${{ inputs.run_id }}
+      TARGET_JSON: ${{ secrets.PP_TARGET_JSON }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Download only the successful checked artifact for this commit
+        shell: pwsh
+        run: |
+          if ($env:CHECKED_RUN_ID -notmatch '^\d+$') { throw 'Numeric build run ID required' }
+          $run=gh api "repos/$env:GH_REPO/actions/runs/$env:CHECKED_RUN_ID" | ConvertFrom-Json
+          if ($run.conclusion -ne 'success' -or $run.head_sha -ne $env:GITHUB_SHA -or $run.path -ne '.github/workflows/build-native.yml') { throw 'Expected a successful native build for this exact commit' }
+          gh run download $env:CHECKED_RUN_ID --repo $env:GH_REPO --name checked-native-solution --dir work/checked
+          if ($LASTEXITCODE -ne 0) { throw 'Artifact download failed' }
+          $package='work/checked/artifacts/ZavaMedicalClaimsConcierge.zip'
+          if ((Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash -ne (Get-Content ($package+'.sha256') -Raw).Trim()) { throw 'Artifact checksum mismatch' }
+          New-Item -ItemType Directory -Path .local -Force | Out-Null
+          $env:TARGET_JSON | Set-Content -LiteralPath .local/target.json -Encoding utf8
+          ./scripts/Invoke-ClaimsSetup.ps1 -Operation Validate -ConfigPath .local/target.json
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r scripts/requirements-deployment.txt
+      - uses: microsoft/powerplatform-actions/actions-install@6e91314a9c6e694ea5c894fe8c40e09d73aa892b # v1
+      - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+      - name: Import the checked artifact and keep processing off
+        shell: pwsh
+        env:
+          APPLICATION_ID: ${{ vars.AZURE_CLIENT_ID }}
+          TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+        run: |
+          $cfg=Get-Content .local/target.json -Raw | ConvertFrom-Json
+          if ($cfg.tenantId -ne $env:TENANT_ID) { throw 'Configured and federated tenants differ' }
+          pac auth create --githubFederated --applicationId $env:APPLICATION_ID --tenant $env:TENANT_ID --environment $cfg.environmentUrl
+          if ($LASTEXITCODE -ne 0) { throw 'PAC federation failed' }
+          ./scripts/Invoke-ClaimsSetup.ps1 -Operation Check -ConfigPath .local/target.json -PackagePath work/checked/artifacts/ZavaMedicalClaimsConcierge.zip
+          ./scripts/Invoke-ClaimsSetup.ps1 -Operation Import -ConfigPath .local/target.json -PackagePath work/checked/artifacts/ZavaMedicalClaimsConcierge.zip -ApprovedEnvironmentUrl $cfg.environmentUrl
+          ./scripts/Invoke-ClaimsSetup.ps1 -Operation Verify -ConfigPath .local/target.json
+      - name: Clean temporary settings and CI authentication
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path -LiteralPath .local/target.json) { Remove-Item -LiteralPath .local/target.json -Force }
+          if (Get-Command pac -ErrorAction SilentlyContinue) { pac auth clear }
+          az logout

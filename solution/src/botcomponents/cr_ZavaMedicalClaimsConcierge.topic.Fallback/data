@@ -1,0 +1,19 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnUnknownIntent
+  id: main
+  actions:
+    - kind: ConditionGroup
+      id: conditionGroup_LktzXw
+      conditions:
+        - id: conditionItem_tlGIVo
+          condition: =System.FallbackCount < 3
+          actions:
+            - kind: SendActivity
+              id: sendMessage_QZreqo
+              activity: Please provide one exact synthetic claim alias, such as SYN-CLM-1001, or ask about the configured medical policy.
+
+      elseActions:
+        - kind: SendActivity
+          id: 5aXj5M
+          activity: I could not match that request. No claim has been changed. Clinical review is handled through the protected evaluation workflow.

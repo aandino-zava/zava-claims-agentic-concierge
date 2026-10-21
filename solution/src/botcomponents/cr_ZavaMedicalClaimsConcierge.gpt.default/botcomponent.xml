@@ -1,0 +1,10 @@
+<botcomponent schemaname="cr_ZavaMedicalClaimsConcierge.gpt.default">
+  <componenttype>15</componenttype>
+  <iscustomizable>0</iscustomizable>
+  <name>Zava Medical Claims Concierge</name>
+  <parentbotid>
+    <schemaname>cr_ZavaMedicalClaimsConcierge</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

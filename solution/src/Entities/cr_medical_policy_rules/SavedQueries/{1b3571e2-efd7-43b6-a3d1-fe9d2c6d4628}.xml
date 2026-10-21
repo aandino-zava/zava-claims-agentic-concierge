@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{1b3571e2-efd7-43b6-a3d1-fe9d2c6d4628}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cr_rule_id" select="1" icon="1" preview="1">
+        <row name="result" id="cr_medical_policy_rulesid">
+          <cell name="cr_rule_id" width="180" />
+          <cell name="cr_policy_number" width="180" />
+          <cell name="cr_policy_version" width="180" />
+          <cell name="cr_cpt_code" width="180" />
+          <cell name="cr_rule_kind" width="180" />
+          <cell name="cr_enforcement_level" width="180" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="cr_medical_policy_rules">
+          <order attribute="cr_rule_id" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="cr_medical_policy_rulesid" />
+          <attribute name="cr_rule_id" />
+          <attribute name="cr_policy_number" />
+          <attribute name="cr_policy_version" />
+          <attribute name="cr_cpt_code" />
+          <attribute name="cr_rule_kind" />
+          <attribute name="cr_enforcement_level" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Claims Review - Medical Policy Rules" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

@@ -1,0 +1,13 @@
+kind: KnowledgeSourceConfiguration
+source:
+  kind: AzureAISearchSource
+  connectionReference: cr_ZavaMedicalClaimsConcierge.cr.cgaJI0DZ
+  indexName: configure-search-index
+  selectFields:
+    - uid
+    - snippet_parent_id
+    - blob_url
+    - snippet
+    - image_snippet_parent_id
+    - snippet_vector
+  semanticConfigurationName: configure-semantic-configuration

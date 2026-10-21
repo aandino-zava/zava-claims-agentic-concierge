@@ -1,0 +1,1212 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Health Claims Portal API",
+    "description": "Synthetic internal demonstration. All claims operations require assigned roles.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/me": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Me",
+        "operationId": "me_api_v1_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdentityResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/claims": {
+      "get": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Claims",
+        "operationId": "listClaims",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "default": "",
+              "title": "Q"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "Submitted",
+                    "Under Review",
+                    "Pending Info",
+                    "Approved",
+                    "Denied",
+                    "In Appeal"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "service_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "Medical",
+                    "Surgical",
+                    "Mental Health",
+                    "Emergency",
+                    "Preventive",
+                    "Dental",
+                    "Vision",
+                    "Physical Therapy",
+                    "Lab/Diagnostics"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Service Type"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Create",
+        "description": "Requires Claims.Writer and an Idempotency-Key. Synthetic claims only.",
+        "operationId": "createClaim",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128,
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDetail"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Identical submission replayed using its original key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims/{claim_id}": {
+      "get": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Claim",
+        "operationId": "getClaim",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "claim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Claim Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims/{claim_id}/status": {
+      "patch": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Status",
+        "description": "Requires Claims.Reviewer. Use expected_version from the latest claim. Records an audit event.",
+        "operationId": "updateClaimStatus",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "claim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Claim Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Analytics",
+        "operationId": "getClaimsAnalytics",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/transitions": {
+      "get": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Transitions",
+        "operationId": "getAllowedTransitions",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object",
+                  "title": "Response Getallowedtransitions"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyticsResponse": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "total_amount": {
+            "type": "number",
+            "title": "Total Amount"
+          },
+          "approved_amount": {
+            "type": "number",
+            "title": "Approved Amount"
+          },
+          "denied_amount": {
+            "type": "number",
+            "title": "Denied Amount"
+          },
+          "approval_rate": {
+            "type": "integer",
+            "title": "Approval Rate",
+            "description": "Percentage of all claims currently approved, including pending in denominator."
+          },
+          "average_amount": {
+            "type": "number",
+            "title": "Average Amount"
+          },
+          "this_month": {
+            "type": "integer",
+            "title": "This Month"
+          },
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Status"
+          },
+          "by_service": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Service"
+          },
+          "by_month": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Month"
+          },
+          "by_provider": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "By Provider"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "total_amount",
+          "approved_amount",
+          "denied_amount",
+          "approval_rate",
+          "average_amount",
+          "this_month",
+          "by_status",
+          "by_service",
+          "by_month",
+          "by_provider"
+        ],
+        "title": "AnalyticsResponse"
+      },
+      "ClaimCreate": {
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Patient Id"
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Last Name"
+          },
+          "group_number": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Group Number",
+            "default": ""
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 30,
+            "title": "Phone",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "pattern": "^$|^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "title": "Email",
+            "default": ""
+          },
+          "provider_name": {
+            "type": "string",
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Provider Name"
+          },
+          "provider_id": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Provider Id"
+          },
+          "npi": {
+            "type": "string",
+            "pattern": "^$|^\\d{10}$",
+            "title": "Npi",
+            "default": ""
+          },
+          "provider_address": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Provider Address",
+            "default": ""
+          },
+          "claim_type": {
+            "type": "string",
+            "enum": [
+              "Professional",
+              "Institutional",
+              "Dental",
+              "Pharmacy"
+            ],
+            "title": "Claim Type",
+            "default": "Professional"
+          },
+          "service_type": {
+            "type": "string",
+            "enum": [
+              "Medical",
+              "Surgical",
+              "Mental Health",
+              "Emergency",
+              "Preventive",
+              "Dental",
+              "Vision",
+              "Physical Therapy",
+              "Lab/Diagnostics"
+            ],
+            "title": "Service Type",
+            "default": "Medical"
+          },
+          "service_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Service Date"
+          },
+          "place_of_service": {
+            "type": "string",
+            "enum": [
+              "Office",
+              "Outpatient Hospital",
+              "Inpatient Hospital",
+              "Emergency Room",
+              "Telehealth",
+              "Other"
+            ],
+            "title": "Place Of Service",
+            "default": "Office"
+          },
+          "diagnosis_code": {
+            "type": "string",
+            "pattern": "^[A-TV-Z][0-9][A-Z0-9](\\.[A-Z0-9]{1,4})?$",
+            "title": "Diagnosis Code"
+          },
+          "procedure_code": {
+            "type": "string",
+            "pattern": "^(\\d{5}|[A-Z]\\d{4}|\\d{4}[A-Z])$",
+            "title": "Procedure Code"
+          },
+          "diagnosis_description": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Diagnosis Description",
+            "default": ""
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10000000.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          },
+          "admission_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admission Date"
+          },
+          "discharge_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discharge Date"
+          },
+          "prior_authorization": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Prior Authorization",
+            "default": ""
+          },
+          "other_insurance": {
+            "type": "boolean",
+            "title": "Other Insurance",
+            "default": false
+          },
+          "other_insurer": {
+            "type": "string",
+            "maxLength": 160,
+            "title": "Other Insurer",
+            "default": ""
+          },
+          "injury_type": {
+            "type": "string",
+            "enum": [
+              "None",
+              "Auto",
+              "Work-related",
+              "Other"
+            ],
+            "title": "Injury Type",
+            "default": "None"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Notes",
+            "default": ""
+          },
+          "synthetic_data_confirmed": {
+            "type": "boolean",
+            "const": true,
+            "title": "Synthetic Data Confirmed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "patient_id",
+          "first_name",
+          "last_name",
+          "provider_name",
+          "provider_id",
+          "service_date",
+          "diagnosis_code",
+          "procedure_code",
+          "amount",
+          "synthetic_data_confirmed"
+        ],
+        "title": "ClaimCreate"
+      },
+      "ClaimDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "title": "Patient Id"
+          },
+          "patient_name": {
+            "type": "string",
+            "title": "Patient Name"
+          },
+          "service_type": {
+            "type": "string",
+            "enum": [
+              "Medical",
+              "Surgical",
+              "Mental Health",
+              "Emergency",
+              "Preventive",
+              "Dental",
+              "Vision",
+              "Physical Therapy",
+              "Lab/Diagnostics"
+            ],
+            "title": "Service Type"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Submitted",
+              "Under Review",
+              "Pending Info",
+              "Approved",
+              "Denied",
+              "In Appeal"
+            ],
+            "title": "Status"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "service_date": {
+            "type": "string",
+            "title": "Service Date"
+          },
+          "provider_name": {
+            "type": "string",
+            "title": "Provider Name"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StoredClaimData"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryEntry"
+            },
+            "type": "array",
+            "title": "History"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "patient_name",
+          "service_type",
+          "status",
+          "amount",
+          "service_date",
+          "provider_name",
+          "created_at",
+          "version",
+          "data",
+          "history"
+        ],
+        "title": "ClaimDetail"
+      },
+      "ClaimList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "ClaimList"
+      },
+      "ClaimSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "title": "Patient Id"
+          },
+          "patient_name": {
+            "type": "string",
+            "title": "Patient Name"
+          },
+          "service_type": {
+            "type": "string",
+            "enum": [
+              "Medical",
+              "Surgical",
+              "Mental Health",
+              "Emergency",
+              "Preventive",
+              "Dental",
+              "Vision",
+              "Physical Therapy",
+              "Lab/Diagnostics"
+            ],
+            "title": "Service Type"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Submitted",
+              "Under Review",
+              "Pending Info",
+              "Approved",
+              "Denied",
+              "In Appeal"
+            ],
+            "title": "Status"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "service_date": {
+            "type": "string",
+            "title": "Service Date"
+          },
+          "provider_name": {
+            "type": "string",
+            "title": "Provider Name"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "patient_name",
+          "service_type",
+          "status",
+          "amount",
+          "service_date",
+          "provider_name",
+          "created_at",
+          "version"
+        ],
+        "title": "ClaimSummary"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HistoryEntry": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Submitted",
+              "Under Review",
+              "Pending Info",
+              "Approved",
+              "Denied",
+              "In Appeal"
+            ],
+            "title": "Status"
+          },
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "actor": {
+            "type": "string",
+            "title": "Actor"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "at",
+          "actor",
+          "note"
+        ],
+        "title": "HistoryEntry"
+      },
+      "IdentityResponse": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "roles"
+        ],
+        "title": "IdentityResponse"
+      },
+      "StatusUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Submitted",
+              "Under Review",
+              "Pending Info",
+              "Approved",
+              "Denied",
+              "In Appeal"
+            ],
+            "title": "Status"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Version"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "expected_version",
+          "note"
+        ],
+        "title": "StatusUpdate"
+      },
+      "StoredClaimData": {
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "title": "Patient Id"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "provider_name": {
+            "type": "string",
+            "title": "Provider Name"
+          },
+          "provider_id": {
+            "type": "string",
+            "title": "Provider Id"
+          },
+          "service_date": {
+            "type": "string",
+            "title": "Service Date"
+          },
+          "diagnosis_code": {
+            "type": "string",
+            "title": "Diagnosis Code"
+          },
+          "procedure_code": {
+            "type": "string",
+            "title": "Procedure Code"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount",
+            "description": "Stored claim charges in USD, represented as decimal text."
+          },
+          "group_number": {
+            "type": "string",
+            "title": "Group Number",
+            "default": ""
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "npi": {
+            "type": "string",
+            "title": "Npi",
+            "default": ""
+          },
+          "provider_address": {
+            "type": "string",
+            "title": "Provider Address",
+            "default": ""
+          },
+          "claim_type": {
+            "type": "string",
+            "title": "Claim Type",
+            "default": "Professional"
+          },
+          "service_type": {
+            "type": "string",
+            "title": "Service Type",
+            "default": "Medical"
+          },
+          "place_of_service": {
+            "type": "string",
+            "title": "Place Of Service",
+            "default": "Office"
+          },
+          "diagnosis_description": {
+            "type": "string",
+            "title": "Diagnosis Description",
+            "default": ""
+          },
+          "admission_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admission Date"
+          },
+          "discharge_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discharge Date"
+          },
+          "prior_authorization": {
+            "type": "string",
+            "title": "Prior Authorization",
+            "default": ""
+          },
+          "other_insurance": {
+            "type": "boolean",
+            "title": "Other Insurance",
+            "default": false
+          },
+          "other_insurer": {
+            "type": "string",
+            "title": "Other Insurer",
+            "default": ""
+          },
+          "injury_type": {
+            "type": "string",
+            "title": "Injury Type",
+            "default": "None"
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "default": ""
+          },
+          "synthetic_data_confirmed": {
+            "type": "boolean",
+            "title": "Synthetic Data Confirmed",
+            "default": true
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "patient_id",
+          "first_name",
+          "last_name",
+          "provider_name",
+          "provider_id",
+          "service_date",
+          "diagnosis_code",
+          "procedure_code",
+          "amount"
+        ],
+        "title": "StoredClaimData",
+        "description": "Stable read contract: field types without submission regex/date/business rules."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

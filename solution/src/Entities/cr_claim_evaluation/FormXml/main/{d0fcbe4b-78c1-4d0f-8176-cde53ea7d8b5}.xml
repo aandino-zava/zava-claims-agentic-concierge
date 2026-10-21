@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{d0fcbe4b-78c1-4d0f-8176-cde53ea7d8b5}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form headerdensity="HighWithControls">
+      <tabs>
+        <tab verticallayout="true" id="{1B9101EE-1443-443C-A5D8-269A4FDC3B09}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{218C47AC-64D5-4C33-9E67-144E885545D9}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{FB5C9AAA-2BBE-44CC-939A-38E7835C58DF}" showlabel="true">
+                        <labels>
+                          <label description="Evaluation ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_evaluation_id" datafieldname="cr_evaluation_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{B052C5EE-131D-4913-A01E-E860F359A63A}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{54A61605-F981-48E0-B906-4F0E300AA390}" showlabel="true">
+                        <labels>
+                          <label description="Claim ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_claim_id" datafieldname="cr_claim_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{538B75C5-9682-414A-8E31-9E320C42056C}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{9D6FECA7-E562-4428-BF3F-3C1FDD23643E}" showlabel="true">
+                        <labels>
+                          <label description="Member ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_member_id" datafieldname="cr_member_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{1F023B12-7F7D-43FB-A983-B34C76C498D1}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{D0FFC31A-85CF-4E8E-9F60-FA90061BAFAF}" showlabel="true">
+                        <labels>
+                          <label description="State" languagecode="1033" />
+                        </labels>
+                        <control id="cr_state" datafieldname="cr_state" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{38C21557-7999-49FB-A782-E37364147C21}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5B93A118-9AD3-4A10-876A-261FB0D85BE1}" showlabel="true">
+                        <labels>
+                          <label description="Outcome" languagecode="1033" />
+                        </labels>
+                        <control id="cr_outcome" datafieldname="cr_outcome" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{06600CC7-7829-417D-BDE6-AA83050DC1E5}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5F8AA12D-D971-43A1-AEBA-928C46EDB74F}" showlabel="true">
+                        <labels>
+                          <label description="Mode" languagecode="1033" />
+                        </labels>
+                        <control id="cr_mode" datafieldname="cr_mode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{C65FD224-3597-464F-B490-448846CE373A}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{E4548DED-EF08-4D89-A26F-ADF5FB592160}" showlabel="true" rowspan="18" auto="false">
+                        <labels>
+                          <label description="Review Summary" languagecode="1033" />
+                        </labels>
+                        <control id="cr_review_summary" datafieldname="cr_review_summary" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" disabled="true" uniqueid="{0DD3B18F-30A0-4BB5-B4F3-9B821E0847D7}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{54732734-E1E7-4A49-BB2B-4782E29257A4}" showlabel="true">
+                        <labels>
+                          <label description="Correlation ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_correlation_id" datafieldname="cr_correlation_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{55C67890-4DC2-4295-A08B-21896C9CCBF4}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7E159702-6F15-4B0B-BA18-62A1F2565A1A}" showlabel="true">
+                        <labels>
+                          <label description="Expires At" languagecode="1033" />
+                        </labels>
+                        <control id="cr_expires_at" datafieldname="cr_expires_at" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" disabled="true" uniqueid="{A202EA94-8590-47E3-88B4-FD923B73E2AF}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6A66DC7D-95D5-4F24-8D4C-CC62C5C57943}" showlabel="true">
+                        <labels>
+                          <label description="Approval ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_approval_id" datafieldname="cr_approval_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{F43ACD46-E832-4ADA-A610-609483945780}" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+      <header id="{777c6934-1e06-4e9f-99c5-aeb9fbc33900}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{1ff4eff6-7a6b-44f9-9389-c4d16278da2b}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{281aadde-62a0-44c8-8b4b-e0ada4224d71}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{d402f8a2-aa8a-4070-973a-b25f689cd71e}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </header>
+      <footer id="{ebd5bcef-cfcc-4a45-83ad-bf846dead3ec}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{5b3914bf-fa88-4cba-8129-292c9934e0dd}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{66e18eda-63d2-4f54-a076-35eed6ceb4f3}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{e8a1a90e-0273-45d5-9f85-76ca5be66216}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </footer>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Everyone />
+      </DisplayConditions>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Claims Review - Claim Evaluation" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

@@ -1,0 +1,5 @@
+<botcomponent_workflowset>
+  <botcomponent_workflow botcomponentid.schemaname="cr_ZavaMedicalClaimsConcierge.action.EvaluateClaimWithRuleCheck_XjZ" workflowid.workflowid="4fcf9742-1ccd-f111-a05a-000d3a33def5">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+</botcomponent_workflowset>

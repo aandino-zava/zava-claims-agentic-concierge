@@ -1,0 +1,30 @@
+name: Build native solution
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: microsoft/powerplatform-actions/actions-install@6e91314a9c6e694ea5c894fe8c40e09d73aa892b # v1
+      - name: Validate deployment safeguards
+        shell: pwsh
+        run: ./tests/Test-Deployment.ps1
+      - name: Pack reviewed source without tenant access
+        shell: pwsh
+        run: |
+          Import-Module ./scripts/ClaimsDeployment.psm1 -Force
+          $pacExecutable=(Get-Command pac).Source
+          New-ClaimsNativePackage -Configuration @{} -PacPath $pacExecutable
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: checked-native-solution
+          path: |
+            artifacts/ZavaMedicalClaimsConcierge.zip
+            artifacts/ZavaMedicalClaimsConcierge.zip.sha256
+            solution/provenance.json
+          if-no-files-found: error

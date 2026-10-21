@@ -1,0 +1,1901 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cr_ClaimsDataverse"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_azureaisearch": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cr_ClaimsAzureAISearch"
+        },
+        "api": {
+          "name": "shared_azureaisearch"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "type": "SecureObject",
+          "defaultValue": {}
+        },
+        "$connections": {
+          "type": "Object",
+          "defaultValue": {}
+        },
+        "ClaimsMode": {
+          "type": "String",
+          "defaultValue": "Simulated",
+          "metadata": {
+            "schemaName": "cr_ClaimsMode"
+          }
+        },
+        "ProcessingEnabled": {
+          "type": "String",
+          "defaultValue": "no",
+          "metadata": {
+            "schemaName": "cr_ProcessingEnabled"
+          }
+        },
+        "SearchIndex": {
+          "type": "String",
+          "defaultValue": "",
+          "metadata": {
+            "schemaName": "cr_SearchIndex"
+          }
+        },
+        "PolicyVersion": {
+          "type": "String",
+          "defaultValue": "1.0",
+          "metadata": {
+            "schemaName": "cr_PolicyVersion"
+          }
+        },
+        "MedicalDirectorObjectId": {
+          "type": "String",
+          "defaultValue": "",
+          "metadata": {
+            "schemaName": "cr_MedicalDirectorObjectId"
+          }
+        },
+        "MedicalDirectorUPN": {
+          "type": "String",
+          "defaultValue": "",
+          "metadata": {
+            "schemaName": "cr_MedicalDirectorUPN"
+          }
+        },
+        "ApprovalLifetimeHours": {
+          "type": "Int",
+          "defaultValue": 24,
+          "metadata": {
+            "schemaName": "cr_ApprovalLifetimeHours"
+          }
+        },
+        "TenantId": {
+          "type": "String",
+          "defaultValue": "",
+          "metadata": {
+            "schemaName": "cr_TenantId"
+          }
+        },
+        "DataverseUrl": {
+          "type": "String",
+          "defaultValue": "",
+          "metadata": {
+            "schemaName": "cr_DataverseUrl"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "842226e5-aa22-46d5-bca6-b6ba8ef63f02"
+          },
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "evaluationJson",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_Result": {
+          "type": "InitializeVariable",
+          "runAfter": {},
+          "inputs": {
+            "variables": [
+              {
+                "name": "Result",
+                "type": "object",
+                "value": {
+                  "status": "EvaluationError",
+                  "reasonCodes": [
+                    "MandatoryReadOrValidationFailed"
+                  ],
+                  "mode": "Simulated",
+                  "authorizationGranted": false
+                }
+              }
+            ]
+          }
+        },
+        "Initialize_EvaluationId": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_Result": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "EvaluationId",
+                "type": "string",
+                "value": "@guid()"
+              }
+            ]
+          }
+        },
+        "Initialize_Outcome": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_EvaluationId": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "Outcome",
+                "type": "string",
+                "value": "InsufficientEvidence"
+              }
+            ]
+          }
+        },
+        "Initialize_Reasons": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_Outcome": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "Reasons",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Initialize_SourcesValid": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_Reasons": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "SourcesValid",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "Initialize_ReferencesValid": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_SourcesValid": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReferencesValid",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "Initialize_Clinical": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_ReferencesValid": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "Clinical",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          }
+        },
+        "Initialize_WeeklyCounts": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_Clinical": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "WeeklyCounts",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Initialize_MedicationCovered": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_WeeklyCounts": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "MedicationCovered",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "Initialize_SourcesSeen": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_MedicationCovered": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "SourcesSeen",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Initialize_CompletedWeeks": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_SourcesSeen": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "CompletedWeeks",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Initialize_CanApprove": {
+          "type": "InitializeVariable",
+          "runAfter": {
+            "Initialize_CompletedWeeks": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "variables": [
+              {
+                "name": "CanApprove",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          }
+        },
+        "Require_simulated_enabled_configuration": {
+          "type": "If",
+          "runAfter": {
+            "Initialize_CanApprove": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@and(equals(parameters('ClaimsMode'),'Simulated'),contains(createArray('yes','true'),toLower(string(parameters('ProcessingEnabled')))))",
+                  true
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Parse_strict_evaluation": {
+              "type": "ParseJson",
+              "runAfter": {},
+              "inputs": {
+                "content": "@triggerBody()?['text']",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "schemaVersion": {
+                      "type": "string",
+                      "enum": [
+                        "1.0"
+                      ]
+                    },
+                    "claimId": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 80
+                    },
+                    "memberId": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 80
+                    },
+                    "cptCode": {
+                      "type": "string",
+                      "minLength": 5,
+                      "maxLength": 5
+                    },
+                    "policyNumber": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 80
+                    },
+                    "policyVersion": {
+                      "type": "string"
+                    },
+                    "claimVersion": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "correlationId": {
+                      "format": "uuid",
+                      "type": "string",
+                      "minLength": 36,
+                      "maxLength": 36
+                    },
+                    "idempotencyKey": {
+                      "format": "uuid",
+                      "type": "string",
+                      "minLength": 36,
+                      "maxLength": 36
+                    },
+                    "evidenceReferences": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "documentId": {
+                            "maxLength": 100,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64
+                          },
+                          "page": {
+                            "maximum": 9999,
+                            "minimum": 1,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "documentId",
+                          "sha256",
+                          "page"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 20,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "proposedFacts": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "documentedTherapyWeeks": {
+                          "anyOf": [
+                            {
+                              "maximum": 104,
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ptSessionsPerWeek": {
+                          "anyOf": [
+                            {
+                              "maximum": 14,
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ptModalityPresent": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "pharmaPresent": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "treatmentFailedOrWorsened": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "documentedTherapyWeeks",
+                        "ptSessionsPerWeek",
+                        "ptModalityPresent",
+                        "pharmaPresent",
+                        "treatmentFailedOrWorsened"
+                      ],
+                      "type": "object"
+                    },
+                    "clinicalSummary": {
+                      "maxLength": 2000,
+                      "type": "string"
+                    },
+                    "agentRecommendation": {
+                      "enum": [
+                        "RecommendHumanReview",
+                        "RequestAdditionalInformation",
+                        "EscalateMedicalDirector"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schemaVersion",
+                    "claimId",
+                    "memberId",
+                    "cptCode",
+                    "policyNumber",
+                    "policyVersion",
+                    "claimVersion",
+                    "correlationId",
+                    "idempotencyKey",
+                    "evidenceReferences",
+                    "proposedFacts",
+                    "clinicalSummary",
+                    "agentRecommendation"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "Identifier_characters": {
+              "type": "Compose",
+              "runAfter": {
+                "Parse_strict_evaluation": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": "@concat(body('Parse_strict_evaluation')?['claimId'],body('Parse_strict_evaluation')?['memberId'],body('Parse_strict_evaluation')?['policyNumber'])"
+            },
+            "Invalid_identifier_characters": {
+              "type": "Query",
+              "runAfter": {
+                "Identifier_characters": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "from": "@range(0,length(outputs('Identifier_characters')))",
+                "where": "@not(contains('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-',substring(outputs('Identifier_characters'),item(),1)))"
+              }
+            },
+            "Invalid_CPT_characters": {
+              "type": "Query",
+              "runAfter": {
+                "Invalid_identifier_characters": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "from": "@range(0,length(body('Parse_strict_evaluation')?['cptCode']))",
+                "where": "@not(contains('0123456789',substring(body('Parse_strict_evaluation')?['cptCode'],item(),1)))"
+              }
+            },
+            "UUID_characters": {
+              "type": "Compose",
+              "runAfter": {
+                "Invalid_CPT_characters": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": "@toLower(replace(concat(body('Parse_strict_evaluation')?['correlationId'],body('Parse_strict_evaluation')?['idempotencyKey']),'-',''))"
+            },
+            "Invalid_UUID_characters": {
+              "type": "Query",
+              "runAfter": {
+                "UUID_characters": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "from": "@range(0,length(outputs('UUID_characters')))",
+                "where": "@not(contains('0123456789abcdef',substring(outputs('UUID_characters'),item(),1)))"
+              }
+            },
+            "Validate_identifier_contract": {
+              "type": "ParseJson",
+              "runAfter": {
+                "Invalid_UUID_characters": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "content": {
+                  "valid": "@and(equals(length(body('Invalid_identifier_characters')),0),equals(length(body('Invalid_CPT_characters')),0),equals(length(body('Invalid_UUID_characters')),0),equals(body('Parse_strict_evaluation')?['policyVersion'],parameters('PolicyVersion')),equals(substring(body('Parse_strict_evaluation')?['correlationId'],8,1),'-'),equals(substring(body('Parse_strict_evaluation')?['correlationId'],13,1),'-'),equals(substring(body('Parse_strict_evaluation')?['correlationId'],18,1),'-'),equals(substring(body('Parse_strict_evaluation')?['correlationId'],23,1),'-'),equals(length(replace(body('Parse_strict_evaluation')?['correlationId'],'-','')),32),equals(substring(body('Parse_strict_evaluation')?['idempotencyKey'],8,1),'-'),equals(substring(body('Parse_strict_evaluation')?['idempotencyKey'],13,1),'-'),equals(substring(body('Parse_strict_evaluation')?['idempotencyKey'],18,1),'-'),equals(substring(body('Parse_strict_evaluation')?['idempotencyKey'],23,1),'-'),equals(length(replace(body('Parse_strict_evaluation')?['idempotencyKey'],'-','')),32))"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "valid"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "Canonical_request": {
+              "type": "Compose",
+              "runAfter": {
+                "Validate_identifier_contract": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": "@string(body('Parse_strict_evaluation'))"
+            },
+            "Find_existing_request": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Canonical_request": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords"
+                },
+                "parameters": {
+                  "entityName": "cr_claim_evaluations",
+                  "$filter": "@concat('cr_request_key eq ',decodeUriComponent('%27'),replace(body('Parse_strict_evaluation')?['idempotencyKey'],decodeUriComponent('%27'),decodeUriComponent('%27%27')),decodeUriComponent('%27'))",
+                  "$top": 2
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Idempotency_key_already_used": {
+              "type": "If",
+              "runAfter": {
+                "Find_existing_request": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@greater(length(body('Find_existing_request')?['value']),0)",
+                      true
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Match_existing_request": {
+                  "type": "If",
+                  "runAfter": {},
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@and(equals(first(body('Find_existing_request')?['value'])?['cr_request_json'],outputs('Canonical_request')),equals(first(body('Find_existing_request')?['value'])?['cr_caller_object_id'],parameters('MedicalDirectorObjectId')))",
+                          true
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Return_stored_result": {
+                      "type": "SetVariable",
+                      "runAfter": {},
+                      "inputs": {
+                        "name": "Result",
+                        "value": "@json(first(body('Find_existing_request')?['value'])?['cr_result_json'])"
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Return_request_conflict": {
+                        "type": "SetVariable",
+                        "runAfter": {},
+                        "inputs": {
+                          "name": "Result",
+                          "value": {
+                            "status": "EvaluationError",
+                            "reasonCodes": [
+                              "IdempotencyConflict"
+                            ],
+                            "mode": "Simulated",
+                            "authorizationGranted": false
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Read_protected_evidence": {
+                    "type": "OpenApiConnection",
+                    "runAfter": {},
+                    "inputs": {
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords"
+                      },
+                      "parameters": {
+                        "entityName": "cr_claim_evidences",
+                        "$filter": "@concat(concat('cr_claim_id eq ',decodeUriComponent('%27'),replace(body('Parse_strict_evaluation')?['claimId'],decodeUriComponent('%27'),decodeUriComponent('%27%27')),decodeUriComponent('%27')),' and ',concat('cr_policy_version eq ',decodeUriComponent('%27'),replace(body('Parse_strict_evaluation')?['policyVersion'],decodeUriComponent('%27'),decodeUriComponent('%27%27')),decodeUriComponent('%27')))",
+                        "$top": 2
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Read_active_policy_rules": {
+                    "type": "OpenApiConnection",
+                    "runAfter": {
+                      "Read_protected_evidence": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords"
+                      },
+                      "parameters": {
+                        "entityName": "cr_medical_policy_ruleses",
+                        "$filter": "@concat(concat('cr_policy_number eq ',decodeUriComponent('%27'),replace(body('Parse_strict_evaluation')?['policyNumber'],decodeUriComponent('%27'),decodeUriComponent('%27%27')),decodeUriComponent('%27')),' and ',concat('cr_policy_version eq ',decodeUriComponent('%27'),replace(body('Parse_strict_evaluation')?['policyVersion'],decodeUriComponent('%27'),decodeUriComponent('%27%27')),decodeUriComponent('%27')),' and cr_is_active eq true')",
+                        "$orderby": "cr_rule_id asc",
+                        "$top": 10
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Retrieve_policy_grounding": {
+                    "type": "OpenApiConnection",
+                    "runAfter": {
+                      "Read_active_policy_rules": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureaisearch",
+                        "connectionName": "shared_azureaisearch",
+                        "operationId": "IntegratedVectorSearch"
+                      },
+                      "parameters": {
+                        "indexName": "@parameters('SearchIndex')",
+                        "integratedVectorSearchRequest/searchText": "AMH RAD 2026 lumbar spine MRI conservative therapy six weeks physical therapy",
+                        "integratedVectorSearchRequest/vectorizedSearchFields": [
+                          "snippet_vector"
+                        ],
+                        "integratedVectorSearchRequest/selectFields": [
+                          "uid",
+                          "snippet",
+                          "blob_url"
+                        ],
+                        "integratedVectorSearchRequest/nearestNeighbors": 3,
+                        "integratedVectorSearchRequest/top": 3
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Evidence": {
+                    "type": "Compose",
+                    "runAfter": {
+                      "Retrieve_policy_grounding": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": "@first(body('Read_protected_evidence')?['value'])"
+                  },
+                  "Facts": {
+                    "type": "Compose",
+                    "runAfter": {
+                      "Evidence": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": "@json(outputs('Evidence')?['cr_facts_json'])"
+                  },
+                  "Sources": {
+                    "type": "Compose",
+                    "runAfter": {
+                      "Facts": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": "@json(outputs('Evidence')?['cr_sources_json'])"
+                  },
+                  "Claim": {
+                    "type": "Compose",
+                    "runAfter": {
+                      "Sources": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": "@json(outputs('Evidence')?['cr_claim_snapshot_json'])"
+                  },
+                  "Duration_rule": {
+                    "type": "Query",
+                    "runAfter": {
+                      "Claim": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "from": "@body('Read_active_policy_rules')?['value']",
+                      "where": "@equals(item()?['cr_rule_kind'],'conservative-duration')"
+                    }
+                  },
+                  "Modalities_rule": {
+                    "type": "Query",
+                    "runAfter": {
+                      "Duration_rule": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "from": "@body('Read_active_policy_rules')?['value']",
+                      "where": "@equals(item()?['cr_rule_kind'],'conservative-modalities')"
+                    }
+                  },
+                  "Missing_evidence_rule": {
+                    "type": "Query",
+                    "runAfter": {
+                      "Modalities_rule": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "from": "@body('Read_active_policy_rules')?['value']",
+                      "where": "@equals(item()?['cr_rule_kind'],'missing-evidence-review')"
+                    }
+                  },
+                  "Invalid_policy_rows": {
+                    "type": "Query",
+                    "runAfter": {
+                      "Missing_evidence_rule": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "from": "@body('Read_active_policy_rules')?['value']",
+                      "where": "@or(not(contains(createArray('AMH-RAD-2026-R01','AMH-RAD-2026-R02','AMH-RAD-2026-R03'),item()?['cr_rule_id'])),not(equals(item()?['cr_cpt_code'],body('Parse_strict_evaluation')?['cptCode'])),greater(ticks(item()?['cr_effective_from']),ticks(outputs('Claim')?['serviceDate'])),lessOrEquals(ticks(coalesce(item()?['cr_effective_to'],'9999-12-31T00:00:00Z')),ticks(outputs('Claim')?['serviceDate'])))"
+                    }
+                  },
+                  "Enforce_claim_and_policy_contract": {
+                    "type": "If",
+                    "runAfter": {
+                      "Invalid_policy_rows": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@and(and(equals(length(body('Duration_rule')),1),equals(length(body('Modalities_rule')),1),equals(length(body('Missing_evidence_rule')),1),equals(length(body('Invalid_policy_rows')),0),equals(first(body('Duration_rule'))?['cr_enforcement_level'],100000000),equals(first(body('Modalities_rule'))?['cr_enforcement_level'],100000000),equals(first(body('Missing_evidence_rule'))?['cr_enforcement_level'],100000001),greaterOrEquals(int(first(body('Duration_rule'))?['cr_min_conservative_weeks']),6),greaterOrEquals(int(first(body('Modalities_rule'))?['cr_min_pt_sessions_week']),2),equals(first(body('Modalities_rule'))?['cr_requires_pt'],true),equals(first(body('Modalities_rule'))?['cr_requires_pharmacology'],true),equals(first(body('Duration_rule'))?['cr_requires_failed_treatment'],true),equals(first(body('Missing_evidence_rule'))?['cr_min_conservative_weeks'],null),equals(first(body('Missing_evidence_rule'))?['cr_min_pt_sessions_week'],null),not(equals(first(body('Missing_evidence_rule'))?['cr_requires_pt'],true)),not(equals(first(body('Missing_evidence_rule'))?['cr_requires_pharmacology'],true)),not(equals(first(body('Missing_evidence_rule'))?['cr_requires_failed_treatment'],true))),equals(length(body('Read_protected_evidence')?['value']),1),equals(length(body('Read_active_policy_rules')?['value']),3),not(empty(body('Retrieve_policy_grounding'))),equals(outputs('Evidence')?['cr_is_synthetic'],true),equals(outputs('Evidence')?['cr_verification_state'],100000001),equals(outputs('Claim')?['synthetic'],true),equals(outputs('Facts')?['claimId'],body('Parse_strict_evaluation')?['claimId']),equals(outputs('Facts')?['memberId'],body('Parse_strict_evaluation')?['memberId']),equals(outputs('Facts')?['cptCode'],body('Parse_strict_evaluation')?['cptCode']),equals(outputs('Facts')?['policyNumber'],body('Parse_strict_evaluation')?['policyNumber']),equals(outputs('Facts')?['policyVersion'],body('Parse_strict_evaluation')?['policyVersion']),equals(outputs('Claim')?['claimId'],body('Parse_strict_evaluation')?['claimId']),equals(outputs('Claim')?['memberId'],body('Parse_strict_evaluation')?['memberId']),equals(outputs('Claim')?['cptCode'],body('Parse_strict_evaluation')?['cptCode']),equals(outputs('Claim')?['version'],body('Parse_strict_evaluation')?['claimVersion']))",
+                            true
+                          ]
+                        }
+                      ]
+                    },
+                    "actions": {
+                      "Validate_protected_sources": {
+                        "type": "Foreach",
+                        "runAfter": {},
+                        "foreach": "@outputs('Sources')",
+                        "actions": {
+                          "Remember_document_id": {
+                            "type": "AppendToArrayVariable",
+                            "runAfter": {},
+                            "inputs": {
+                              "name": "SourcesSeen",
+                              "value": "@items('Validate_protected_sources')?['documentId']"
+                            }
+                          },
+                          "Check_source_binding": {
+                            "type": "If",
+                            "runAfter": {
+                              "Remember_document_id": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@and(equals(outputs('Evidence')?['cr_is_synthetic'],true),equals(outputs('Facts')?['synthetic'],true),contains(createArray('clinical-note','pt-log','medication-log'),items('Validate_protected_sources')?['documentId']),equals(items('Validate_protected_sources')?['path'],concat('sources/',outputs('Facts')?['fixtureName'],'/',if(equals(items('Validate_protected_sources')?['documentId'],'pt-log'),'pt-log.csv',if(equals(items('Validate_protected_sources')?['documentId'],'clinical-note'),'clinical-note.json','medication-log.json')))),greaterOrEquals(int(items('Validate_protected_sources')?['pages']),1),equals(length(items('Validate_protected_sources')?['sha256']),64))",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {},
+                            "else": {
+                              "actions": {
+                                "Reject_source_binding": {
+                                  "type": "SetVariable",
+                                  "runAfter": {},
+                                  "inputs": {
+                                    "name": "SourcesValid",
+                                    "value": false
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Clinical_note_source": {
+                            "type": "If",
+                            "runAfter": {
+                              "Check_source_binding": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@equals(items('Validate_protected_sources')?['documentId'],'clinical-note')",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Parse_clinical_source": {
+                                "type": "Compose",
+                                "runAfter": {},
+                                "inputs": "@json(base64ToString(items('Validate_protected_sources')?['bodyBase64']))"
+                              },
+                              "Use_clinical_source": {
+                                "type": "SetVariable",
+                                "runAfter": {
+                                  "Parse_clinical_source": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "name": "Clinical",
+                                  "value": "@outputs('Parse_clinical_source')"
+                                }
+                              },
+                              "Compare_clinical_source": {
+                                "type": "If",
+                                "runAfter": {
+                                  "Use_clinical_source": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "expression": {
+                                  "and": [
+                                    {
+                                      "equals": [
+                                        "@and(equals(string(outputs('Parse_clinical_source')?['claimId']),string(outputs('Facts')?['claimId'])),equals(string(outputs('Parse_clinical_source')?['memberId']),string(outputs('Facts')?['memberId'])),equals(string(outputs('Parse_clinical_source')?['cptCode']),string(outputs('Facts')?['cptCode'])),equals(string(outputs('Parse_clinical_source')?['therapyStart']),string(outputs('Facts')?['therapyStart'])),equals(string(outputs('Parse_clinical_source')?['therapyEndExclusive']),string(outputs('Facts')?['therapyEndExclusive'])),equals(string(outputs('Parse_clinical_source')?['indication']),string(outputs('Facts')?['indication'])),equals(string(outputs('Parse_clinical_source')?['treatmentFailedOrWorsened']),string(outputs('Facts')?['treatmentFailedOrWorsened'])),equals(string(outputs('Parse_clinical_source')?['redFlagsVerified']),string(outputs('Facts')?['redFlagsVerified'])),equals(string(outputs('Parse_clinical_source')?['contradictions']),string(outputs('Facts')?['contradictions'])))",
+                                        true
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "actions": {},
+                                "else": {
+                                  "actions": {
+                                    "Reject_clinical_mismatch": {
+                                      "type": "SetVariable",
+                                      "runAfter": {},
+                                      "inputs": {
+                                        "name": "SourcesValid",
+                                        "value": false
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "PT_log_source": {
+                            "type": "If",
+                            "runAfter": {
+                              "Clinical_note_source": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@equals(items('Validate_protected_sources')?['documentId'],'pt-log')",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "PT_source_text": {
+                                "type": "Compose",
+                                "runAfter": {},
+                                "inputs": "@replace(base64ToString(items('Validate_protected_sources')?['bodyBase64']),decodeUriComponent('%0D'),'')"
+                              },
+                              "PT_source_rows": {
+                                "type": "Query",
+                                "runAfter": {
+                                  "PT_source_text": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@skip(split(outputs('PT_source_text'),decodeUriComponent('%0A')),1)",
+                                  "where": "@not(empty(item()))"
+                                }
+                              },
+                              "Parse_PT_source": {
+                                "type": "Select",
+                                "runAfter": {
+                                  "PT_source_rows": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@body('PT_source_rows')",
+                                  "select": {
+                                    "date": "@first(split(item(),','))",
+                                    "attended": "@equals(last(split(item(),',')),'true')"
+                                  }
+                                }
+                              },
+                              "Invalid_PT_tokens": {
+                                "type": "Query",
+                                "runAfter": {
+                                  "Parse_PT_source": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@body('PT_source_rows')",
+                                  "where": "@or(not(equals(length(split(item(),',')),2)),not(contains(createArray('true','false'),last(split(item(),',')))))"
+                                }
+                              },
+                              "Compare_PT_source": {
+                                "type": "If",
+                                "runAfter": {
+                                  "Invalid_PT_tokens": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "expression": {
+                                  "and": [
+                                    {
+                                      "equals": [
+                                        "@and(equals(first(split(outputs('PT_source_text'),decodeUriComponent('%0A'))),'date,attended'),equals(length(body('Invalid_PT_tokens')),0),equals(string(body('Parse_PT_source')),string(outputs('Facts')?['sessions'])))",
+                                        true
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "actions": {},
+                                "else": {
+                                  "actions": {
+                                    "Reject_PT_source_mismatch": {
+                                      "type": "SetVariable",
+                                      "runAfter": {},
+                                      "inputs": {
+                                        "name": "SourcesValid",
+                                        "value": false
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Medication_log_source": {
+                            "type": "If",
+                            "runAfter": {
+                              "PT_log_source": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@equals(items('Validate_protected_sources')?['documentId'],'medication-log')",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Parse_medication_source": {
+                                "type": "Compose",
+                                "runAfter": {},
+                                "inputs": "@json(base64ToString(items('Validate_protected_sources')?['bodyBase64']))"
+                              },
+                              "Compare_medication_source": {
+                                "type": "If",
+                                "runAfter": {
+                                  "Parse_medication_source": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "expression": {
+                                  "and": [
+                                    {
+                                      "equals": [
+                                        "@equals(string(outputs('Parse_medication_source')),string(outputs('Facts')?['medications']))",
+                                        true
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "actions": {},
+                                "else": {
+                                  "actions": {
+                                    "Reject_medication_source_mismatch": {
+                                      "type": "SetVariable",
+                                      "runAfter": {},
+                                      "inputs": {
+                                        "name": "SourcesValid",
+                                        "value": false
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "runtimeConfiguration": {
+                          "concurrency": {
+                            "repetitions": 1
+                          }
+                        }
+                      },
+                      "Validate_agent_references": {
+                        "type": "Foreach",
+                        "runAfter": {
+                          "Validate_protected_sources": [
+                            "Succeeded"
+                          ]
+                        },
+                        "foreach": "@body('Parse_strict_evaluation')?['evidenceReferences']",
+                        "actions": {
+                          "Match_reference": {
+                            "type": "Query",
+                            "runAfter": {},
+                            "inputs": {
+                              "from": "@outputs('Sources')",
+                              "where": "@and(equals(item()?['documentId'],items('Validate_agent_references')?['documentId']),equals(item()?['sha256'],items('Validate_agent_references')?['sha256']),greaterOrEquals(int(item()?['pages']),int(items('Validate_agent_references')?['page'])))"
+                            }
+                          },
+                          "Reference_exists_exactly_once": {
+                            "type": "If",
+                            "runAfter": {
+                              "Match_reference": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@equals(length(body('Match_reference')),1)",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {},
+                            "else": {
+                              "actions": {
+                                "Reject_reference": {
+                                  "type": "SetVariable",
+                                  "runAfter": {},
+                                  "inputs": {
+                                    "name": "ReferencesValid",
+                                    "value": false
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "runtimeConfiguration": {
+                          "concurrency": {
+                            "repetitions": 1
+                          }
+                        }
+                      },
+                      "Reference_document_ids": {
+                        "type": "Select",
+                        "runAfter": {
+                          "Validate_agent_references": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": {
+                          "from": "@body('Parse_strict_evaluation')?['evidenceReferences']",
+                          "select": "@item()?['documentId']"
+                        }
+                      },
+                      "Required_source_ids": {
+                        "type": "Compose",
+                        "runAfter": {
+                          "Reference_document_ids": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": "@if(equals(outputs('Facts')?['redFlagsVerified'],true),createArray('clinical-note'),createArray('clinical-note','pt-log','medication-log'))"
+                      },
+                      "Source_and_reference_checks_pass": {
+                        "type": "If",
+                        "runAfter": {
+                          "Required_source_ids": [
+                            "Succeeded"
+                          ]
+                        },
+                        "expression": {
+                          "and": [
+                            {
+                              "equals": [
+                                "@and(variables('SourcesValid'),variables('ReferencesValid'),equals(length(variables('SourcesSeen')),length(union(variables('SourcesSeen'),variables('SourcesSeen')))),equals(length(body('Reference_document_ids')),length(union(body('Reference_document_ids'),body('Reference_document_ids')))),equals(length(intersection(outputs('Required_source_ids'),variables('SourcesSeen'))),length(outputs('Required_source_ids'))),equals(length(intersection(outputs('Required_source_ids'),body('Reference_document_ids'))),length(outputs('Required_source_ids'))),not(equals(outputs('Facts')?['redFlagsVerified'],null)))",
+                                true
+                              ]
+                            }
+                          ]
+                        },
+                        "actions": {
+                          "Check_contradictions": {
+                            "type": "If",
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@greater(length(outputs('Facts')?['contradictions']),0)",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Contradictions_need_MD": {
+                                "type": "SetVariable",
+                                "runAfter": {},
+                                "inputs": {
+                                  "name": "Outcome",
+                                  "value": "MedicalDirectorReviewRequired"
+                                }
+                              },
+                              "Contradiction_reason": {
+                                "type": "AppendToArrayVariable",
+                                "runAfter": {
+                                  "Contradictions_need_MD": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "name": "Reasons",
+                                  "value": "ContradictoryEvidence"
+                                }
+                              }
+                            }
+                          },
+                          "Verified_red_flag_path": {
+                            "type": "If",
+                            "runAfter": {
+                              "Check_contradictions": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@and(equals(length(outputs('Facts')?['contradictions']),0),equals(outputs('Facts')?['redFlagsVerified'],true))",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Red_flags_need_MD": {
+                                "type": "SetVariable",
+                                "runAfter": {},
+                                "inputs": {
+                                  "name": "Outcome",
+                                  "value": "MedicalDirectorReviewRequired"
+                                }
+                              },
+                              "Red_flag_path_verified": {
+                                "type": "SetVariable",
+                                "runAfter": {
+                                  "Red_flags_need_MD": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "name": "CanApprove",
+                                  "value": true
+                                }
+                              },
+                              "Red_flag_reason": {
+                                "type": "AppendToArrayVariable",
+                                "runAfter": {
+                                  "Red_flag_path_verified": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "name": "Reasons",
+                                  "value": "VerifiedRedFlagClinicalPath"
+                                }
+                              }
+                            }
+                          },
+                          "Conservative_clinical_path": {
+                            "type": "If",
+                            "runAfter": {
+                              "Verified_red_flag_path": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@and(equals(length(outputs('Facts')?['contradictions']),0),equals(outputs('Facts')?['redFlagsVerified'],false))",
+                                    true
+                                  ]
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Therapy_days": {
+                                "type": "Compose",
+                                "runAfter": {},
+                                "inputs": "@div(sub(ticks(outputs('Facts')?['therapyEndExclusive']),ticks(outputs('Facts')?['therapyStart'])),864000000000)"
+                              },
+                              "Count_complete_weeks": {
+                                "type": "SetVariable",
+                                "runAfter": {
+                                  "Therapy_days": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "name": "CompletedWeeks",
+                                  "value": "@div(outputs('Therapy_days'),7)"
+                                }
+                              },
+                              "Attended_PT": {
+                                "type": "Query",
+                                "runAfter": {
+                                  "Count_complete_weeks": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@outputs('Facts')?['sessions']",
+                                  "where": "@equals(item()?['attended'],true)"
+                                }
+                              },
+                              "Attended_dates": {
+                                "type": "Select",
+                                "runAfter": {
+                                  "Attended_PT": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@body('Attended_PT')",
+                                  "select": "@item()?['date']"
+                                }
+                              },
+                              "Out_of_range_PT": {
+                                "type": "Query",
+                                "runAfter": {
+                                  "Attended_dates": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "inputs": {
+                                  "from": "@body('Attended_PT')",
+                                  "where": "@or(less(ticks(item()?['date']),ticks(outputs('Facts')?['therapyStart'])),greaterOrEquals(ticks(item()?['date']),ticks(outputs('Facts')?['therapyEndExclusive'])))"
+                                }
+                              },
+                              "Treatment_log_valid": {
+                                "type": "If",
+                                "runAfter": {
+                                  "Out_of_range_PT": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "expression": {
+                                  "and": [
+                                    {
+                                      "equals": [
+                                        "@and(greater(outputs('Therapy_days'),0),lessOrEquals(outputs('Therapy_days'),728),equals(length(body('Out_of_range_PT')),0),equals(length(body('Attended_dates')),length(union(body('Attended_dates'),body('Attended_dates')))),contains(createArray('RadicularPain','SpinalStenosis','PersistentLowBackPain'),outputs('Facts')?['indication']),lessOrEquals(ticks(outputs('Facts')?['therapyEndExclusive']),ticks(outputs('Claim')?['serviceDate'])),or(equals(outputs('Facts')?['treatmentFailedOrWorsened'],true),equals(outputs('Facts')?['treatmentFailedOrWorsened'],false)))",
+                                        true
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "actions": {
+                                  "Check_each_complete_week": {
+                                    "type": "Foreach",
+                                    "runAfter": {},
+                                    "foreach": "@range(0,variables('CompletedWeeks'))",
+                                    "actions": {
+                                      "Sessions_in_week": {
+                                        "type": "Query",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "from": "@body('Attended_PT')",
+                                          "where": "@and(greaterOrEquals(ticks(item()?['date']),ticks(addDays(outputs('Facts')?['therapyStart'],mul(items('Check_each_complete_week'),7)))),less(ticks(item()?['date']),ticks(addDays(outputs('Facts')?['therapyStart'],mul(add(items('Check_each_complete_week'),1),7)))))"
+                                        }
+                                      },
+                                      "Record_week_count": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {
+                                          "Sessions_in_week": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "name": "WeeklyCounts",
+                                          "value": "@length(body('Sessions_in_week'))"
+                                        }
+                                      }
+                                    },
+                                    "runtimeConfiguration": {
+                                      "concurrency": {
+                                        "repetitions": 1
+                                      }
+                                    }
+                                  },
+                                  "Weeks_below_minimum": {
+                                    "type": "Query",
+                                    "runAfter": {
+                                      "Check_each_complete_week": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "inputs": {
+                                      "from": "@variables('WeeklyCounts')",
+                                      "where": "@less(item(),int(first(body('Modalities_rule'))?['cr_min_pt_sessions_week']))"
+                                    }
+                                  },
+                                  "Check_medication_every_day": {
+                                    "type": "Foreach",
+                                    "runAfter": {
+                                      "Weeks_below_minimum": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "foreach": "@range(0,outputs('Therapy_days'))",
+                                    "actions": {
+                                      "Medication_covering_day": {
+                                        "type": "Query",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "from": "@outputs('Facts')?['medications']",
+                                          "where": "@and(equals(item()?['verified'],true),contains(createArray('NSAID','MuscleRelaxant','NeuropathicPainAgent'),item()?['category']),lessOrEquals(ticks(item()?['start']),ticks(addDays(outputs('Facts')?['therapyStart'],items('Check_medication_every_day')))),greater(ticks(item()?['endExclusive']),ticks(addDays(outputs('Facts')?['therapyStart'],items('Check_medication_every_day')))))"
+                                        }
+                                      },
+                                      "Medication_day_covered": {
+                                        "type": "If",
+                                        "runAfter": {
+                                          "Medication_covering_day": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "expression": {
+                                          "and": [
+                                            {
+                                              "equals": [
+                                                "@greater(length(body('Medication_covering_day')),0)",
+                                                true
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "actions": {},
+                                        "else": {
+                                          "actions": {
+                                            "Medication_day_missing": {
+                                              "type": "SetVariable",
+                                              "runAfter": {},
+                                              "inputs": {
+                                                "name": "MedicationCovered",
+                                                "value": false
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "runtimeConfiguration": {
+                                      "concurrency": {
+                                        "repetitions": 1
+                                      }
+                                    }
+                                  },
+                                  "Duration_meets_policy": {
+                                    "type": "If",
+                                    "runAfter": {
+                                      "Check_medication_every_day": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "expression": {
+                                      "and": [
+                                        {
+                                          "equals": [
+                                            "@less(variables('CompletedWeeks'),int(first(body('Duration_rule'))?['cr_min_conservative_weeks']))",
+                                            true
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "actions": {
+                                      "Duration_meets_policy_reason": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "name": "Reasons",
+                                          "value": "InsufficientConservativeDuration"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "Every_week_meets_policy": {
+                                    "type": "If",
+                                    "runAfter": {
+                                      "Duration_meets_policy": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "expression": {
+                                      "and": [
+                                        {
+                                          "equals": [
+                                            "@or(equals(variables('CompletedWeeks'),0),greater(length(body('Weeks_below_minimum')),0))",
+                                            true
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "actions": {
+                                      "Every_week_meets_policy_reason": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "name": "Reasons",
+                                          "value": "PtFrequencyBelowMinimum"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "Medication_meets_policy": {
+                                    "type": "If",
+                                    "runAfter": {
+                                      "Every_week_meets_policy": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "expression": {
+                                      "and": [
+                                        {
+                                          "equals": [
+                                            "@not(variables('MedicationCovered'))",
+                                            true
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "actions": {
+                                      "Medication_meets_policy_reason": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "name": "Reasons",
+                                          "value": "PharmacologyNotDocumentedForRegimen"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "Treatment_failed_or_worsened": {
+                                    "type": "If",
+                                    "runAfter": {
+                                      "Medication_meets_policy": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "expression": {
+                                      "and": [
+                                        {
+                                          "equals": [
+                                            "@not(equals(outputs('Facts')?['treatmentFailedOrWorsened'],true))",
+                                            true
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "actions": {
+                                      "Treatment_failed_or_worsened_reason": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "name": "Reasons",
+                                          "value": "FailedTreatmentNotEstablished"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "All_conservative_checks_pass": {
+                                    "type": "If",
+                                    "runAfter": {
+                                      "Treatment_failed_or_worsened": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "expression": {
+                                      "and": [
+                                        {
+                                          "equals": [
+                                            "@equals(length(variables('Reasons')),0)",
+                                            true
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "actions": {
+                                      "Conservative_eligible": {
+                                        "type": "SetVariable",
+                                        "runAfter": {},
+                                        "inputs": {
+                                          "name": "Outcome",
+                                          "value": "EligibleForHumanReview"
+                                        }
+                                      },
+                                      "Conservative_path_verified": {
+                                        "type": "SetVariable",
+                                        "runAfter": {
+                                          "Conservative_eligible": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "name": "CanApprove",
+                                          "value": true
+                                        }
+                                      },
+                                      "Conservative_reason": {
+                                        "type": "AppendToArrayVariable",
+                                        "runAfter": {
+                                          "Conservative_path_verified": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "inputs": {
+                                          "name": "Reasons",
+                                          "value": "ConservativeCriteriaVerified"
+                                        }
+                                      }
+                                    },
+                                    "else": {
+                                      "actions": {
+                                        "Conservative_unmet": {
+                                          "type": "SetVariable",
+                                          "runAfter": {},
+                                          "inputs": {
+                                            "name": "Outcome",
+                                            "value": "PolicyCriteriaNotMet"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "else": {
+                                  "actions": {
+                                    "Treatment_invalid_reason": {
+                                      "type": "AppendToArrayVariable",
+                                      "runAfter": {},
+                                      "inputs": {
+                                        "name": "Reasons",
+                                        "value": "InvalidOrUnknownTreatmentLog"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {
+                            "Missing_or_invalid_source_reason": {
+                              "type": "AppendToArrayVariable",
+                              "runAfter": {},
+                              "inputs": {
+                                "name": "Reasons",
+                                "value": "RequiredClinicalRecordsMissingOrMismatched"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Evaluation_result": {
+                        "type": "Compose",
+                        "runAfter": {
+                          "Source_and_reference_checks_pass": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": {
+                          "evaluationId": "@variables('EvaluationId')",
+                          "correlationId": "@body('Parse_strict_evaluation')?['correlationId']",
+                          "status": "@variables('Outcome')",
+                          "reasonCodes": "@variables('Reasons')",
+                          "mode": "Simulated",
+                          "authorizationGranted": false,
+                          "eligibleForHumanApproval": "@variables('CanApprove')",
+                          "completedWeeks": "@variables('CompletedWeeks')",
+                          "weeklyPtCounts": "@variables('WeeklyCounts')",
+                          "pharmacologyVerified": "@variables('MedicationCovered')",
+                          "claimWriteCount": 0,
+                          "expiresAt": "@addHours(utcNow(),parameters('ApprovalLifetimeHours'))"
+                        }
+                      },
+                      "Stable_evidence_snapshot": {
+                        "type": "Compose",
+                        "runAfter": {
+                          "Evaluation_result": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": {
+                          "claim_evidenceid": "@outputs('Evidence')?['cr_claim_evidenceid']",
+                          "evidence_id": "@outputs('Evidence')?['cr_evidence_id']",
+                          "claim_id": "@outputs('Evidence')?['cr_claim_id']",
+                          "member_id": "@outputs('Evidence')?['cr_member_id']",
+                          "cpt_code": "@outputs('Evidence')?['cr_cpt_code']",
+                          "policy_number": "@outputs('Evidence')?['cr_policy_number']",
+                          "policy_version": "@outputs('Evidence')?['cr_policy_version']",
+                          "source_version": "@outputs('Evidence')?['cr_source_version']",
+                          "verification_state": "@outputs('Evidence')?['cr_verification_state']",
+                          "is_synthetic": "@outputs('Evidence')?['cr_is_synthetic']",
+                          "facts_json": "@outputs('Evidence')?['cr_facts_json']",
+                          "sources_json": "@outputs('Evidence')?['cr_sources_json']",
+                          "claim_snapshot_json": "@outputs('Evidence')?['cr_claim_snapshot_json']"
+                        }
+                      },
+                      "Create_durable_evaluation": {
+                        "type": "OpenApiConnection",
+                        "runAfter": {
+                          "Stable_evidence_snapshot": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "cr_claim_evaluations",
+                            "item/cr_evaluation_id": "@variables('EvaluationId')",
+                            "item/cr_request_key": "@body('Parse_strict_evaluation')?['idempotencyKey']",
+                            "item/cr_claim_id": "@body('Parse_strict_evaluation')?['claimId']",
+                            "item/cr_member_id": "@body('Parse_strict_evaluation')?['memberId']",
+                            "item/cr_correlation_id": "@body('Parse_strict_evaluation')?['correlationId']",
+                            "item/cr_caller_object_id": "@parameters('MedicalDirectorObjectId')",
+                            "item/cr_policy_number": "@body('Parse_strict_evaluation')?['policyNumber']",
+                            "item/cr_policy_version": "@body('Parse_strict_evaluation')?['policyVersion']",
+                            "item/cr_claim_version": "@body('Parse_strict_evaluation')?['claimVersion']",
+                            "item/cr_evaluation_version": 1,
+                            "item/cr_state": "PendingReview",
+                            "item/cr_outcome": "@variables('Outcome')",
+                            "item/cr_assigned_reviewer_id": "@parameters('MedicalDirectorObjectId')",
+                            "item/cr_expires_at": "@addHours(utcNow(),parameters('ApprovalLifetimeHours'))",
+                            "item/cr_mode": "Simulated",
+                            "item/cr_request_json": "@outputs('Canonical_request')",
+                            "item/cr_result_json": "@string(outputs('Evaluation_result'))",
+                            "item/cr_policy_snapshot_json": "@string(body('Read_active_policy_rules')?['value'])",
+                            "item/cr_evidence_snapshot_json": "@string(outputs('Stable_evidence_snapshot'))",
+                            "item/cr_review_summary": "@concat('SYNTHETIC POC / Simulated. Claim ',body('Parse_strict_evaluation')?['claimId'],'. Outcome: ',variables('Outcome'),'. Reasons: ',join(variables('Reasons'),', '),'. No real claim has been changed.',decodeUriComponent('%0A%0A'),outputs('Evidence')?['cr_review_summary'])"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Return_durable_result": {
+                        "type": "SetVariable",
+                        "runAfter": {
+                          "Create_durable_evaluation": [
+                            "Succeeded"
+                          ]
+                        },
+                        "inputs": {
+                          "name": "Result",
+                          "value": "@outputs('Evaluation_result')"
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Return_binding_or_policy_error": {
+                          "type": "SetVariable",
+                          "runAfter": {},
+                          "inputs": {
+                            "name": "Result",
+                            "value": {
+                              "status": "EvaluationError",
+                              "reasonCodes": [
+                                "ClaimBindingOrPolicyCoverageInvalid"
+                              ],
+                              "mode": "Simulated",
+                              "authorizationGranted": false
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Processing_is_disabled": {
+                "type": "SetVariable",
+                "runAfter": {},
+                "inputs": {
+                  "name": "Result",
+                  "value": {
+                    "status": "ProcessingDisabled",
+                    "mode": "Simulated",
+                    "authorizationGranted": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Respond_to_Copilot": {
+          "runAfter": {
+            "Require_simulated_enabled_configuration": [
+              "Succeeded",
+              "Failed",
+              "TimedOut",
+              "Skipped"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1488d402-0e35-4874-b558-77a2d998851a"
+          },
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "resultjson": "@string(variables('Result'))"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultjson": {
+                  "title": "resultJson",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,8 @@
+<botcomponent_connectionreferenceset>
+  <botcomponent_connectionreference botcomponentid.schemaname="cr_ZavaMedicalClaimsConcierge.action.MicrosoftDataverse-Listrowsfromselectedenvironment" connectionreferenceid.connectionreferencelogicalname="cr_ZavaMedicalClaimsConcierge.shared_commondataserviceforapps.a6d033d6de074535bd21c4e0f95310a0">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_connectionreference>
+  <botcomponent_connectionreference botcomponentid.schemaname="cr_ZavaMedicalClaimsConcierge.topic.ZavaMedicalClaimsConciergeAzureAISearch_J7rroRlc5pEyeh85bSrf2" connectionreferenceid.connectionreferencelogicalname="cr_ZavaMedicalClaimsConcierge.cr.cgaJI0DZ">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_connectionreference>
+</botcomponent_connectionreferenceset>

@@ -1,0 +1,11 @@
+<botcomponent schemaname="cr_ZavaMedicalClaimsConcierge.topic.ZavaMedicalClaimsConciergeAzureAISearch_J7rroRlc5pEyeh85bSrf2">
+  <componenttype>16</componenttype>
+  <description>This knowledge source provides information about a pre-built Vector Index that can be used to improve agent response</description>
+  <iscustomizable>0</iscustomizable>
+  <name>Zava Medical Claims Concierge - Azure AI Search</name>
+  <parentbotid>
+    <schemaname>cr_ZavaMedicalClaimsConcierge</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

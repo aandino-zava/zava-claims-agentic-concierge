@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{40d7051a-e4a8-474c-a09a-b9c385faa326}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{e8175cf5-71dd-43e6-a18e-1315a1c40abf}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{069b2a51-680c-4bed-8f5a-f15dcac84c45}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{D8ED9EB1-9EA8-487E-8A2F-AD3D9852A9E5}" showlabel="true">
+                        <labels>
+                          <label description="Rule ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_rule_id" datafieldname="cr_rule_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{C8D5D5E9-D016-4C73-8039-FB7262D2CF7E}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{E2DCDDB6-77FA-47C6-937B-81DD3A2329DF}" showlabel="true">
+                        <labels>
+                          <label description="Policy Number" languagecode="1033" />
+                        </labels>
+                        <control id="cr_policy_number" datafieldname="cr_policy_number" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{4AF34145-9AC2-44DC-9B4C-0E06F6DE65E2}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{FA16F316-93B7-4AAF-B675-128D3A273DE4}" showlabel="true">
+                        <labels>
+                          <label description="Policy Version" languagecode="1033" />
+                        </labels>
+                        <control id="cr_policy_version" datafieldname="cr_policy_version" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{8430472B-3E96-4363-ADFA-B3D96BCC1B75}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{D2CB75F0-5384-4820-9357-27F7631BF308}" showlabel="true">
+                        <labels>
+                          <label description="CPT Code" languagecode="1033" />
+                        </labels>
+                        <control id="cr_cpt_code" datafieldname="cr_cpt_code" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{ACDE2FA2-1799-4425-931C-24B1C5D3279B}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{9CFBCF62-01D8-4E4A-BCA4-E23B49895C53}" showlabel="true">
+                        <labels>
+                          <label description="Rule Kind" languagecode="1033" />
+                        </labels>
+                        <control id="cr_rule_kind" datafieldname="cr_rule_kind" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{4E4F3FAE-6845-4FAD-80B7-52880DB845FF}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{62FC3D52-3C47-4D93-9625-D4B2CEF24AF1}" showlabel="true">
+                        <labels>
+                          <label description="Enforcement Level" languagecode="1033" />
+                        </labels>
+                        <control id="cr_enforcement_level" datafieldname="cr_enforcement_level" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" disabled="true" uniqueid="{9B99936E-C1E7-483F-9F97-5A67C6779284}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{F93991A9-2998-4FDB-A633-23D0C9718CF5}" showlabel="true" rowspan="18" auto="false">
+                        <labels>
+                          <label description="Natural Language Rule" languagecode="1033" />
+                        </labels>
+                        <control id="cr_natural_language_rule" datafieldname="cr_natural_language_rule" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" disabled="true" uniqueid="{20ABE9D0-AAC1-42B3-8149-A68B988A6AFE}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{927708A4-D567-443F-89EF-8AC892EBA573}" showlabel="true">
+                        <labels>
+                          <label description="Min Conservative Weeks" languagecode="1033" />
+                        </labels>
+                        <control id="cr_min_conservative_weeks" datafieldname="cr_min_conservative_weeks" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" disabled="true" uniqueid="{F84E7D98-E92D-48E9-87EB-39C29183BCDA}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{9CB06C07-47CF-4656-938A-90BBBAE16669}" showlabel="true">
+                        <labels>
+                          <label description="Min PT Sessions Week" languagecode="1033" />
+                        </labels>
+                        <control id="cr_min_pt_sessions_week" datafieldname="cr_min_pt_sessions_week" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" disabled="true" uniqueid="{730A9755-18E6-48E7-94AA-F2142DD1C80D}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5AA5A51D-179C-4B7D-9CF4-0494F8F47514}" showlabel="true">
+                        <labels>
+                          <label description="Requires Pt" languagecode="1033" />
+                        </labels>
+                        <control id="cr_requires_pt" datafieldname="cr_requires_pt" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" disabled="true" uniqueid="{BD5C114F-A329-4E5D-9833-709D08FF23CE}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1D893E23-6E2D-4CE9-A56A-CEFE0F364DDF}" showlabel="true">
+                        <labels>
+                          <label description="Requires Pharmacology" languagecode="1033" />
+                        </labels>
+                        <control id="cr_requires_pharmacology" datafieldname="cr_requires_pharmacology" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" disabled="true" uniqueid="{28F3EC0C-4054-4B3F-8621-3DD433335730}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{BBAEC455-3495-4C2C-8F2B-77F35EA3D293}" showlabel="true">
+                        <labels>
+                          <label description="Requires Failed Treatment" languagecode="1033" />
+                        </labels>
+                        <control id="cr_requires_failed_treatment" datafieldname="cr_requires_failed_treatment" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" disabled="true" uniqueid="{56A402AA-4AD4-4EBB-A3EA-6968C76E453D}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{3B992905-61F7-4E28-8B60-51E2D6E38DCA}" showlabel="true">
+                        <labels>
+                          <label description="Is Active" languagecode="1033" />
+                        </labels>
+                        <control id="cr_is_active" datafieldname="cr_is_active" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" disabled="true" uniqueid="{430F896F-3B70-4F5A-A488-AE99A629C369}" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Claims Review - Medical Policy Rule" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

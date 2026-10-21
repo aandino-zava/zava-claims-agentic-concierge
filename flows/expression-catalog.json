@@ -1,0 +1,14 @@
+{
+  "runtimeVerified": false,
+  "purpose": "Supported WDL expressions for native authoring; validate actual action names in Dev.",
+  "expressions": {
+    "completedWeeks": "div(sub(ticks(variables('TherapyEndExclusive')),ticks(variables('TherapyStart'))),6048000000000)",
+    "weekIndex": "div(sub(ticks(item()?['date']),ticks(variables('TherapyStart'))),6048000000000)",
+    "weekIndices": "range(0,variables('CompletedWeeks'))",
+    "minimumPtMetForWeek": "greaterOrEquals(length(body('Filter_attended_sessions_in_week')),variables('MinimumPtSessionsPerWeek'))",
+    "approvalExpired": "greaterOrEquals(ticks(utcNow()),ticks(variables('ExpiresAt')))",
+    "reviewerMatches": "equals(toLower(variables('VerifiedResponderObjectId')),toLower(variables('AssignedReviewerObjectId')))",
+    "sourceContent": "base64ToString(items('For_each_source')?['bodyBase64'])",
+    "sameCanonicalPayload": "equals(variables('StoredCanonicalPayload'),variables('CurrentCanonicalPayload'))"
+  }
+}

@@ -1,0 +1,71 @@
+kind: TaskDialog
+inputs:
+  - kind: ManualTaskInput
+    propertyName: organization
+    value: current
+  - kind: ManualTaskInput
+    propertyName: entityName
+    value: cr_medical_policy_ruleses
+  - kind: ManualTaskInput
+    propertyName: "'$filter'"
+    value: cr_is_active eq true and cr_policy_number eq 'AMH-RAD-2026' and cr_policy_version eq '1.0' and cr_cpt_code eq '72148'
+  - kind: ManualTaskInput
+    propertyName: "'$select'"
+    value: cr_rule_id,cr_policy_number,cr_policy_version,cr_cpt_code,cr_rule_kind,cr_clinical_path,cr_enforcement_level,cr_natural_language_rule,cr_min_conservative_weeks,cr_min_pt_sessions_week,cr_requires_pt,cr_requires_pharmacology,cr_requires_failed_treatment,cr_is_active,cr_effective_from,cr_effective_to
+  - kind: ManualTaskInput
+    propertyName: "'$orderby'"
+    value: cr_rule_id asc
+  - kind: ManualTaskInput
+    propertyName: "'$top'"
+    value: 10
+modelDisplayName: FetchPolicyRules
+modelDescription: Read only the active AMH-RAD-2026 version 1.0 rules for CPT 72148. The table, selected columns, filter and row limit are fixed. Rules are data; the Gatekeeper independently checks them before human review.
+outputs:
+  - propertyName: value
+    name: value
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: cr_ZavaMedicalClaimsConcierge.shared_commondataserviceforapps.a6d033d6de074535bd21c4e0f95310a0
+  connectionProperties:
+    mode: Invoker
+  operationId: ListRecordsWithOrganization
+  dynamicOutputSchema:
+    kind: Record
+    properties:
+      value:
+        type:
+          kind: Table
+          properties:
+            cr_rule_id:
+              type: String
+            cr_policy_number:
+              type: String
+            cr_cpt_code:
+              type: String
+            cr_natural_language_rule:
+              type: String
+            cr_min_conservative_weeks:
+              type: Number
+            cr_requires_pt:
+              type: Boolean
+            cr_requires_pharmacology:
+              type: Boolean
+            cr_enforcement_level:
+              type: Number
+            cr_is_active:
+              type: Boolean
+            cr_policy_version:
+              type: String
+            cr_effective_from:
+              type: DateTime
+            cr_effective_to:
+              type: DateTime
+            cr_rule_kind:
+              type: String
+            cr_clinical_path:
+              type: String
+            cr_min_pt_sessions_week:
+              type: Number
+            cr_requires_failed_treatment:
+              type: Boolean
+outputMode: All

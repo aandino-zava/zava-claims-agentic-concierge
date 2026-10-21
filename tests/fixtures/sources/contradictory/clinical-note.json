@@ -1,0 +1,14 @@
+{
+  "claimId": "SYN-CLM-1006",
+  "memberId": "SYN-MEMBER-1006",
+  "cptCode": "72148",
+  "indication": "RadicularPain",
+  "treatmentFailedOrWorsened": true,
+  "redFlagsVerified": false,
+  "contradictions": [
+    "Illustrative clinical notes disagree about the course."
+  ],
+  "therapyStart": "2026-08-03",
+  "therapyEndExclusive": "2026-09-14",
+  "untrustedNarrative": "SYNTHETIC POC FIXTURE. These structured facts are generated test data, not a clinical attestation."
+}

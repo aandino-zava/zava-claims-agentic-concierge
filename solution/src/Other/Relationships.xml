@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityRelationships xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <EntityRelationship Name="business_unit_cr_claim_evaluation" />
+  <EntityRelationship Name="business_unit_cr_claim_evidence" />
+  <EntityRelationship Name="business_unit_cr_medical_policy_rules" />
+  <EntityRelationship Name="lk_cr_claim_evaluation_createdby" />
+  <EntityRelationship Name="lk_cr_claim_evaluation_modifiedby" />
+  <EntityRelationship Name="lk_cr_claim_evidence_createdby" />
+  <EntityRelationship Name="lk_cr_claim_evidence_modifiedby" />
+  <EntityRelationship Name="lk_cr_medical_policy_rules_createdby" />
+  <EntityRelationship Name="lk_cr_medical_policy_rules_modifiedby" />
+  <EntityRelationship Name="owner_cr_claim_evaluation" />
+  <EntityRelationship Name="owner_cr_claim_evidence" />
+  <EntityRelationship Name="owner_cr_medical_policy_rules" />
+  <EntityRelationship Name="team_cr_claim_evaluation" />
+  <EntityRelationship Name="team_cr_claim_evidence" />
+  <EntityRelationship Name="team_cr_medical_policy_rules" />
+  <EntityRelationship Name="user_cr_claim_evaluation" />
+  <EntityRelationship Name="user_cr_claim_evidence" />
+  <EntityRelationship Name="user_cr_medical_policy_rules" />
+</EntityRelationships>

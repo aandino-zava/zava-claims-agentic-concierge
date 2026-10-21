@@ -1,0 +1,9 @@
+<dvtablesearchentity dvtablesearchentityid="e8fd8804-1fcd-f111-a05a-000d3a5d749b">
+  <dvtablesearch>
+    <dvtablesearchid>e7fd8804-1fcd-f111-a05a-000d3a5d749b</dvtablesearchid>
+  </dvtablesearch>
+  <entitylogicalname>cr_claim_evaluation</entitylogicalname>
+  <iscustomizable>1</iscustomizable>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</dvtablesearchentity>

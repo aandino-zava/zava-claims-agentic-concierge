@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.env
+.local/
+work/
+*.local.json
+*.sqlite*
+artifacts/
+solution/raw/
+agent/native/
+solution/*.zip
+!solution/provenance.json

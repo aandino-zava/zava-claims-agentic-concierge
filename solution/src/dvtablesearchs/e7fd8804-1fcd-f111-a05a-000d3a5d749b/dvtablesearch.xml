@@ -1,0 +1,11 @@
+<dvtablesearch dvtablesearchid="e7fd8804-1fcd-f111-a05a-000d3a5d749b">
+  <appmoduleuniquename>cr_ClaimsReview</appmoduleuniquename>
+  <iscustomizable>1</iscustomizable>
+  <m365appmoduleid>
+    <uniquename>cr_ClaimsReview</uniquename>
+  </m365appmoduleid>
+  <name>M365_Primary_model_cr_ClaimsReview</name>
+  <searchtype>0</searchtype>
+  <statecode>1</statecode>
+  <statuscode>2</statuscode>
+</dvtablesearch>

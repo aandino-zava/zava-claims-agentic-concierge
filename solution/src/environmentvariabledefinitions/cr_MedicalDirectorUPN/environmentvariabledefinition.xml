@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<environmentvariabledefinition schemaname="cr_MedicalDirectorUPN">
+  <description default="Zava Medical Claims Concierge POC configuration.">
+    <label description="Zava Medical Claims Concierge POC configuration." languagecode="1033" />
+  </description>
+  <displayname default="Claims MedicalDirectorUPN">
+    <label description="Claims MedicalDirectorUPN" languagecode="1033" />
+  </displayname>
+  <introducedversion>1.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

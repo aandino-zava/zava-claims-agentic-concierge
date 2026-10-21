@@ -1,0 +1,57 @@
+[
+  {
+    "suffix": "ClaimsMode",
+    "type": "String",
+    "defaultValue": "Simulated"
+  },
+  {
+    "suffix": "ProcessingEnabled",
+    "type": "Boolean",
+    "defaultValue": "no"
+  },
+  {
+    "suffix": "SearchEndpoint",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "SearchIndex",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "PolicyVersion",
+    "type": "String",
+    "defaultValue": "1.0"
+  },
+  {
+    "suffix": "MedicalDirectorObjectId",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "MedicalDirectorUPN",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "ClaimsApiBaseUrl",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "ApprovalLifetimeHours",
+    "type": "Decimal",
+    "defaultValue": "24"
+  },
+  {
+    "suffix": "TenantId",
+    "type": "String",
+    "defaultValue": ""
+  },
+  {
+    "suffix": "DataverseUrl",
+    "type": "String",
+    "defaultValue": ""
+  }
+]

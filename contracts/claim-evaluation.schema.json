@@ -1,0 +1,198 @@
+{
+  "$defs": {
+    "EvidenceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "documentId": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "title": "Documentid",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "page": {
+          "maximum": 9999,
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "documentId",
+        "sha256",
+        "page"
+      ],
+      "title": "EvidenceReference",
+      "type": "object"
+    },
+    "ProposedFacts": {
+      "additionalProperties": false,
+      "properties": {
+        "documentedTherapyWeeks": {
+          "anyOf": [
+            {
+              "maximum": 104,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Documentedtherapyweeks"
+        },
+        "ptSessionsPerWeek": {
+          "anyOf": [
+            {
+              "maximum": 14,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ptsessionsperweek"
+        },
+        "ptModalityPresent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ptmodalitypresent"
+        },
+        "pharmaPresent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Pharmapresent"
+        },
+        "treatmentFailedOrWorsened": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Treatmentfailedorworsened"
+        }
+      },
+      "required": [
+        "documentedTherapyWeeks",
+        "ptSessionsPerWeek",
+        "ptModalityPresent",
+        "pharmaPresent",
+        "treatmentFailedOrWorsened"
+      ],
+      "title": "ProposedFacts",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0",
+      "title": "Schemaversion",
+      "type": "string"
+    },
+    "claimId": {
+      "pattern": "^[A-Z0-9-]{3,80}$",
+      "title": "Claimid",
+      "type": "string"
+    },
+    "memberId": {
+      "pattern": "^[A-Z0-9-]{3,80}$",
+      "title": "Memberid",
+      "type": "string"
+    },
+    "cptCode": {
+      "pattern": "^[0-9]{5}$",
+      "title": "Cptcode",
+      "type": "string"
+    },
+    "policyNumber": {
+      "pattern": "^[A-Z0-9-]{3,80}$",
+      "title": "Policynumber",
+      "type": "string"
+    },
+    "policyVersion": {
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "title": "Policyversion",
+      "type": "string"
+    },
+    "claimVersion": {
+      "minimum": 1,
+      "title": "Claimversion",
+      "type": "integer"
+    },
+    "correlationId": {
+      "format": "uuid",
+      "title": "Correlationid",
+      "type": "string"
+    },
+    "idempotencyKey": {
+      "format": "uuid",
+      "title": "Idempotencykey",
+      "type": "string"
+    },
+    "evidenceReferences": {
+      "items": {
+        "$ref": "#/$defs/EvidenceReference"
+      },
+      "maxItems": 20,
+      "minItems": 1,
+      "title": "Evidencereferences",
+      "type": "array"
+    },
+    "proposedFacts": {
+      "$ref": "#/$defs/ProposedFacts"
+    },
+    "clinicalSummary": {
+      "maxLength": 2000,
+      "title": "Clinicalsummary",
+      "type": "string"
+    },
+    "agentRecommendation": {
+      "enum": [
+        "RecommendHumanReview",
+        "RequestAdditionalInformation",
+        "EscalateMedicalDirector"
+      ],
+      "title": "Agentrecommendation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "claimId",
+    "memberId",
+    "cptCode",
+    "policyNumber",
+    "policyVersion",
+    "claimVersion",
+    "correlationId",
+    "idempotencyKey",
+    "evidenceReferences",
+    "proposedFacts",
+    "clinicalSummary",
+    "agentRecommendation"
+  ],
+  "title": "EvaluationRequest",
+  "type": "object"
+}

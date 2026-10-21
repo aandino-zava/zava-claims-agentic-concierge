@@ -1,0 +1,2 @@
+# Preserve the reviewed native source digest on every checkout.
+/solution/src/** -text

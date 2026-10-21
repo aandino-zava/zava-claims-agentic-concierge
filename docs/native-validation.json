@@ -1,0 +1,65 @@
+{
+  "validationLevel": "Approved Dev native evaluation and authenticated human escalation; local simulator mutation tests",
+  "nativeAgentPublished": true,
+  "nativeFlowCount": 2,
+  "auditedClaimsTableCount": 3,
+  "activePolicyRuleCount": 3,
+  "syntheticEvidenceFixtureCount": 8,
+  "medicalDirectorRoleAssignmentReadBack": true,
+  "search": {
+    "entraDocumentReadHttpStatus": 200,
+    "nativeKnowledgeChunkCount": 3
+  },
+  "nativeEvaluation": {
+    "status": "EligibleForHumanReview",
+    "reasonCodes": [
+      "ConservativeCriteriaVerified"
+    ],
+    "completedWeeks": 6,
+    "weeklyPtCounts": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "pharmacologyVerified": true,
+    "mode": "Simulated"
+  },
+  "nativeHumanReview": {
+    "authenticatedResponseVerified": true,
+    "decision": "Escalate",
+    "rationale": "Need more input",
+    "finalState": "Escalated",
+    "realClaimWriteCount": 0,
+    "simulatedClaimWriteCount": 0,
+    "claimVersionAfter": 1,
+    "claimStatusAfter": "Under Review"
+  },
+  "nativeIneligibleApprovalGuard": "BlockedIneligibleApproval during earlier diagnostic",
+  "localReference": {
+    "policyTests": 58,
+    "policyFailures": 0,
+    "syntheticScenarios": 8,
+    "updatedDeploymentChecks": 24,
+    "workflowLint": "Passed for four workflows"
+  },
+  "package": {
+    "sha256": "1d8e25b110c96d0a335067f28c2492784f7719e15690fa6c14760d8dbcf3632d",
+    "checkerStatus": "Finished",
+    "checkerFindings": 0,
+    "processingEnabled": false,
+    "flowState": "Off",
+    "receivingImportVerified": false
+  },
+  "notVerifiedNatively": [
+    "Approved or denied synthetic mutation receipt",
+    "Full concurrency/staleness/fault matrix",
+    "Negative account sign-in",
+    "Receiving tenant installation",
+    "GitHub workflow execution"
+  ],
+  "githubPublication": "Not performed; separate user approval required",
+  "organizationAuditReadback": true
+}

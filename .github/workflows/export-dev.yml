@@ -1,0 +1,82 @@
+name: Propose saved Dev changes
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+concurrency:
+  group: claims-dev-tenant-operation
+  cancel-in-progress: false
+jobs:
+  export:
+    runs-on: windows-latest
+    environment: claims-dev
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TARGET_JSON: ${{ secrets.PP_TARGET_JSON }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e . -r scripts/requirements-deployment.txt
+      - uses: microsoft/powerplatform-actions/actions-install@6e91314a9c6e694ea5c894fe8c40e09d73aa892b # v1
+      - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+      - name: Export and prepare a portable copy
+        shell: pwsh
+        env:
+          APPLICATION_ID: ${{ vars.AZURE_CLIENT_ID }}
+          TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+        run: |
+          New-Item -ItemType Directory -Path .local -Force | Out-Null
+          $env:TARGET_JSON | Set-Content -LiteralPath .local/target.json -Encoding utf8
+          $cfg=Get-Content .local/target.json -Raw | ConvertFrom-Json
+          if ($cfg.tenantId -ne $env:TENANT_ID) { throw 'Configured and federated tenants differ' }
+          pac auth create --githubFederated --applicationId $env:APPLICATION_ID --tenant $env:TENANT_ID --environment $cfg.environmentUrl
+          if ($LASTEXITCODE -ne 0) { throw 'PAC federation failed' }
+          ./scripts/Export-ClaimsDevForReview.ps1 -ConfigPath .local/target.json
+          python scripts/run_checks.py --output work/export-verification
+          if ($LASTEXITCODE -ne 0) { throw 'Local verification failed' }
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: portable-dev-export-review
+          path: |
+            artifacts/ZavaMedicalClaimsConcierge.zip
+            artifacts/ZavaMedicalClaimsConcierge.zip.sha256
+          if-no-files-found: ignore
+      - name: Open a review PR only when portable source changed
+        shell: pwsh
+        run: |
+          git diff --quiet -- solution/src
+          if ($LASTEXITCODE -eq 0) { Write-Host 'No portable source changes'; exit 0 }
+          $branch='automation/dev-export-'+$env:GITHUB_RUN_ID
+          git switch -c $branch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add solution/src solution/provenance.json
+          git commit -m 'Update portable claims solution from saved Dev changes'
+          if ($LASTEXITCODE -ne 0) { throw 'Scoped commit failed' }
+          git push origin $branch
+          if ($LASTEXITCODE -ne 0) { throw 'Branch push failed' }
+          @'
+          Updates the portable claims solution from a saved Dev export. Installation values are removed and packaged processing remains off. The native package and local checks were rebuilt in this export run. Review component and dependency changes before merging.
+
+          This PR does not deploy, enable processing, publish the agent, or synchronize business records and credentials. GITHUB_TOKEN-created PRs may not start normal PR CI automatically; run Build native solution explicitly when needed.
+          '@ | Set-Content -LiteralPath work/pr-body.txt -Encoding utf8
+          gh pr create --repo $env:GH_REPO --base $env:DEFAULT_BRANCH --head $branch --title 'Update portable claims solution from Dev' --body-file work/pr-body.txt
+      - name: Clean temporary settings and CI authentication
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path -LiteralPath .local/target.json) { Remove-Item -LiteralPath .local/target.json -Force }
+          if (Get-Command pac -ErrorAction SilentlyContinue) { pac auth clear }
+          az logout

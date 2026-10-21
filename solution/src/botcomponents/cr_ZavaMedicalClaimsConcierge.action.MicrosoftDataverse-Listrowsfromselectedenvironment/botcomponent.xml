@@ -1,0 +1,10 @@
+<botcomponent schemaname="cr_ZavaMedicalClaimsConcierge.action.MicrosoftDataverse-Listrowsfromselectedenvironment">
+  <componenttype>9</componenttype>
+  <iscustomizable>0</iscustomizable>
+  <name>FetchPolicyRules</name>
+  <parentbotid>
+    <schemaname>cr_ZavaMedicalClaimsConcierge</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

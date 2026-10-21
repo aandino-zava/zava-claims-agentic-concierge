@@ -1,0 +1,57 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0",
+      "title": "Schemaversion",
+      "type": "string"
+    },
+    "evaluationId": {
+      "format": "uuid",
+      "title": "Evaluationid",
+      "type": "string"
+    },
+    "evaluationVersion": {
+      "minimum": 1,
+      "title": "Evaluationversion",
+      "type": "integer"
+    },
+    "approvalId": {
+      "format": "uuid",
+      "title": "Approvalid",
+      "type": "string"
+    },
+    "claimVersion": {
+      "minimum": 1,
+      "title": "Claimversion",
+      "type": "integer"
+    },
+    "decision": {
+      "enum": [
+        "ApproveAuthorization",
+        "DenyClaim",
+        "RequestAdditionalInformation",
+        "Escalate"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 500,
+      "minLength": 10,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "evaluationId",
+    "evaluationVersion",
+    "approvalId",
+    "claimVersion",
+    "decision",
+    "reason"
+  ],
+  "title": "DecisionRequest",
+  "type": "object"
+}

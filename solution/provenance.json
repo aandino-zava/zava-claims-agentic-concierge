@@ -1,0 +1,20 @@
+{
+  "importableSolutionPresent": true,
+  "rawExportSha256": "5de4798b2432fa968d0ee6069204b6815a6d93db09b3833929643d41b6629dc3",
+  "portableReviewComplete": true,
+  "nativeExportPresent": true,
+  "processingEnabledInDistributable": false,
+  "requiredSolution": "ZavaMedicalClaimsConcierge",
+  "state": "NativePackageBuilt",
+  "nativeFlowCount": 2,
+  "enabledAgentToolCount": 3,
+  "claimsRoleCount": 1,
+  "receivingKnowledgeConfigurationRequired": true,
+  "receivingImportVerified": false,
+  "omittedDisabledPreviewBindings": 1,
+  "dependencyReview": "Standard AppModuleWebResources and PowerAppsAppFramework packages required in receiving Dev",
+  "portableTreeSha256": "fd82109a80a91c95253a0446ce588edbc11333883846ceb5f855089b81a59434",
+  "packageSha256": "1d8e25b110c96d0a335067f28c2492784f7719e15690fa6c14760d8dbcf3632d",
+  "checkerStatus": "Finished",
+  "checkerFindings": 0
+}

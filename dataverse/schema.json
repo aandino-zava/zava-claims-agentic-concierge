@@ -1,0 +1,354 @@
+{
+  "format": "authoring-plan-1.0",
+  "nativeSolutionExport": false,
+  "tables": [
+    {
+      "name": "{prefix}_medical_policy_rules",
+      "displayName": "Medical Policy Rules",
+      "primaryName": "{prefix}_rule_id",
+      "platformGuid": true,
+      "auditEnabled": true,
+      "columns": [
+        {
+          "name": "{prefix}_rule_id",
+          "type": "string",
+          "displayName": "Rule ID"
+        },
+        {
+          "name": "{prefix}_policy_number",
+          "type": "string",
+          "displayName": "Policy Number"
+        },
+        {
+          "name": "{prefix}_cpt_code",
+          "type": "string",
+          "displayName": "CPT Code"
+        },
+        {
+          "name": "{prefix}_natural_language_rule",
+          "type": "memo",
+          "displayName": "Natural Language Rule",
+          "maxLength": 4000
+        },
+        {
+          "name": "{prefix}_min_conservative_weeks",
+          "type": "int",
+          "displayName": "Min Conservative Weeks"
+        },
+        {
+          "name": "{prefix}_requires_pt",
+          "type": "bool",
+          "displayName": "Requires Pt"
+        },
+        {
+          "name": "{prefix}_requires_pharmacology",
+          "type": "bool",
+          "displayName": "Requires Pharmacology"
+        },
+        {
+          "name": "{prefix}_enforcement_level",
+          "type": "choice",
+          "displayName": "Enforcement Level",
+          "options": {
+            "Strict_Block": 100000000,
+            "Medical_Director_Review": 100000001,
+            "Audit_Only": 100000002
+          }
+        },
+        {
+          "name": "{prefix}_is_active",
+          "type": "bool",
+          "displayName": "Is Active"
+        },
+        {
+          "name": "{prefix}_policy_version",
+          "type": "string",
+          "displayName": "Policy Version"
+        },
+        {
+          "name": "{prefix}_effective_from",
+          "type": "datetime",
+          "displayName": "Effective From"
+        },
+        {
+          "name": "{prefix}_effective_to",
+          "type": "datetime",
+          "displayName": "Effective To"
+        },
+        {
+          "name": "{prefix}_rule_kind",
+          "type": "string",
+          "displayName": "Rule Kind"
+        },
+        {
+          "name": "{prefix}_clinical_path",
+          "type": "string",
+          "displayName": "Clinical Path"
+        },
+        {
+          "name": "{prefix}_min_pt_sessions_week",
+          "type": "int",
+          "displayName": "Min PT Sessions Week"
+        },
+        {
+          "name": "{prefix}_requires_failed_treatment",
+          "type": "bool",
+          "displayName": "Requires Failed Treatment"
+        }
+      ],
+      "alternateKeys": [
+        [
+          "{prefix}_rule_id",
+          "{prefix}_policy_version"
+        ]
+      ]
+    },
+    {
+      "name": "{prefix}_claim_evidence",
+      "displayName": "Claim Evidence Facts",
+      "primaryName": "{prefix}_evidence_id",
+      "platformGuid": true,
+      "auditEnabled": true,
+      "columns": [
+        {
+          "name": "{prefix}_evidence_id",
+          "type": "string",
+          "displayName": "Evidence ID"
+        },
+        {
+          "name": "{prefix}_claim_id",
+          "type": "string",
+          "displayName": "Claim ID"
+        },
+        {
+          "name": "{prefix}_member_id",
+          "type": "string",
+          "displayName": "Member ID"
+        },
+        {
+          "name": "{prefix}_cpt_code",
+          "type": "string",
+          "displayName": "CPT Code"
+        },
+        {
+          "name": "{prefix}_policy_number",
+          "type": "string",
+          "displayName": "Policy Number"
+        },
+        {
+          "name": "{prefix}_policy_version",
+          "type": "string",
+          "displayName": "Policy Version"
+        },
+        {
+          "name": "{prefix}_source_version",
+          "type": "int",
+          "displayName": "Source Version"
+        },
+        {
+          "name": "{prefix}_verification_state",
+          "type": "choice",
+          "displayName": "Verification State",
+          "options": {
+            "Unverified": 100000000,
+            "SyntheticFixture": 100000001,
+            "ClinicianVerified": 100000002,
+            "Retired": 100000003
+          }
+        },
+        {
+          "name": "{prefix}_attestor_object_id",
+          "type": "string",
+          "displayName": "Attestor Object ID"
+        },
+        {
+          "name": "{prefix}_attested_at",
+          "type": "datetime",
+          "displayName": "Attested At"
+        },
+        {
+          "name": "{prefix}_is_synthetic",
+          "type": "bool",
+          "displayName": "Is Synthetic"
+        },
+        {
+          "name": "{prefix}_facts_json",
+          "type": "memo",
+          "displayName": "Facts JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_sources_json",
+          "type": "memo",
+          "displayName": "Sources JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_claim_snapshot_json",
+          "type": "memo",
+          "displayName": "Claim Snapshot JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_review_summary",
+          "type": "memo",
+          "displayName": "Review Summary",
+          "maxLength": 4000
+        }
+      ],
+      "alternateKeys": [
+        [
+          "{prefix}_evidence_id"
+        ],
+        [
+          "{prefix}_claim_id",
+          "{prefix}_policy_version"
+        ]
+      ]
+    },
+    {
+      "name": "{prefix}_claim_evaluation",
+      "displayName": "Claim Evaluations",
+      "primaryName": "{prefix}_evaluation_id",
+      "platformGuid": true,
+      "auditEnabled": true,
+      "columns": [
+        {
+          "name": "{prefix}_evaluation_id",
+          "type": "string",
+          "displayName": "Evaluation ID"
+        },
+        {
+          "name": "{prefix}_request_key",
+          "type": "string",
+          "displayName": "Request Key"
+        },
+        {
+          "name": "{prefix}_claim_id",
+          "type": "string",
+          "displayName": "Claim ID"
+        },
+        {
+          "name": "{prefix}_member_id",
+          "type": "string",
+          "displayName": "Member ID"
+        },
+        {
+          "name": "{prefix}_correlation_id",
+          "type": "string",
+          "displayName": "Correlation ID"
+        },
+        {
+          "name": "{prefix}_caller_object_id",
+          "type": "string",
+          "displayName": "Caller Object ID"
+        },
+        {
+          "name": "{prefix}_policy_number",
+          "type": "string",
+          "displayName": "Policy Number"
+        },
+        {
+          "name": "{prefix}_policy_version",
+          "type": "string",
+          "displayName": "Policy Version"
+        },
+        {
+          "name": "{prefix}_claim_version",
+          "type": "int",
+          "displayName": "Claim Version"
+        },
+        {
+          "name": "{prefix}_evaluation_version",
+          "type": "int",
+          "displayName": "Evaluation Version"
+        },
+        {
+          "name": "{prefix}_state",
+          "type": "string",
+          "displayName": "State"
+        },
+        {
+          "name": "{prefix}_outcome",
+          "type": "string",
+          "displayName": "Outcome"
+        },
+        {
+          "name": "{prefix}_approval_id",
+          "type": "string",
+          "displayName": "Approval ID"
+        },
+        {
+          "name": "{prefix}_assigned_reviewer_id",
+          "type": "string",
+          "displayName": "Assigned Reviewer ID"
+        },
+        {
+          "name": "{prefix}_reviewer_object_id",
+          "type": "string",
+          "displayName": "Reviewer Object ID"
+        },
+        {
+          "name": "{prefix}_expires_at",
+          "type": "datetime",
+          "displayName": "Expires At"
+        },
+        {
+          "name": "{prefix}_mode",
+          "type": "string",
+          "displayName": "Mode"
+        },
+        {
+          "name": "{prefix}_request_json",
+          "type": "memo",
+          "displayName": "Request JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_result_json",
+          "type": "memo",
+          "displayName": "Result JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_policy_snapshot_json",
+          "type": "memo",
+          "displayName": "Policy Snapshot JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_evidence_snapshot_json",
+          "type": "memo",
+          "displayName": "Evidence Snapshot JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_decision_json",
+          "type": "memo",
+          "displayName": "Decision JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_receipt_json",
+          "type": "memo",
+          "displayName": "Receipt JSON",
+          "maxLength": 1000000
+        },
+        {
+          "name": "{prefix}_review_summary",
+          "type": "memo",
+          "displayName": "Review Summary",
+          "maxLength": 4000
+        }
+      ],
+      "alternateKeys": [
+        [
+          "{prefix}_evaluation_id"
+        ],
+        [
+          "{prefix}_request_key"
+        ]
+      ]
+    }
+  ]
+}

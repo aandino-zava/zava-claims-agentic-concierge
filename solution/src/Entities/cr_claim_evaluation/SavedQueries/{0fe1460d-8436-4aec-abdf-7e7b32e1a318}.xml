@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{0fe1460d-8436-4aec-abdf-7e7b32e1a318}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cr_evaluation_id" select="1" icon="1" preview="1">
+        <row name="result" id="cr_claim_evaluationid">
+          <cell name="cr_evaluation_id" width="180" />
+          <cell name="cr_claim_id" width="180" />
+          <cell name="cr_member_id" width="180" />
+          <cell name="cr_state" width="180" />
+          <cell name="cr_outcome" width="180" />
+          <cell name="cr_mode" width="180" />
+          <cell name="cr_correlation_id" width="180" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="cr_claim_evaluation">
+          <order attribute="cr_evaluation_id" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="cr_claim_evaluationid" />
+          <attribute name="cr_evaluation_id" />
+          <attribute name="cr_claim_id" />
+          <attribute name="cr_member_id" />
+          <attribute name="cr_state" />
+          <attribute name="cr_outcome" />
+          <attribute name="cr_mode" />
+          <attribute name="cr_correlation_id" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Claims Review - Claim Evaluations" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

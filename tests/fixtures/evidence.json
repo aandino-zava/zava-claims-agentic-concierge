@@ -1,0 +1,660 @@
+[
+  {
+    "claimId": "SYN-CLM-1001",
+    "memberId": "SYN-MEMBER-1001",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "complete",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      },
+      {
+        "date": "2026-09-10",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-14",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/complete/clinical-note.json",
+        "pages": 1,
+        "sha256": "4bdb133443a42a8cc28e0d363e58dffbc12eb65cbe06cadbaf70545cf6ee983a"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/complete/pt-log.csv",
+        "pages": 1,
+        "sha256": "ce7186a4bb5476d93190a3ab76a88c3bbf0a4dbe607a69c7bcf3e69cb80a05ca"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/complete/medication-log.json",
+        "pages": 1,
+        "sha256": "20f9d5307143d54d1a66a0e1cea9ae2646b06c6a6a94a83c0df04a0ec858d46e"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1002",
+    "memberId": "SYN-MEMBER-1002",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "missing-attachments",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      },
+      {
+        "date": "2026-09-10",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-14",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "appeal-letter",
+        "path": "sources/missing-attachments/appeal.txt",
+        "pages": 1,
+        "sha256": "8afdf687a39257ffd500b92465265cedfb81ffc56f499ba3934d2125c9543a9d"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1003",
+    "memberId": "SYN-MEMBER-1003",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "short-duration",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-07",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-07",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/short-duration/clinical-note.json",
+        "pages": 1,
+        "sha256": "63a400a0cf537c84afec82b7188846881e82bc1683dc79695f2b9583d072033e"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/short-duration/pt-log.csv",
+        "pages": 1,
+        "sha256": "0e4368da80c272ca5d1f17fe1d424937c4ad299ae1e9e38499726fabb15ee3c6"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/short-duration/medication-log.json",
+        "pages": 1,
+        "sha256": "75efac2c3758334a1c76f8c8a8fb01a9e360d5a08ada6376e40554ce3a8dbcb1"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1004",
+    "memberId": "SYN-MEMBER-1004",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "low-frequency",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-14",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/low-frequency/clinical-note.json",
+        "pages": 1,
+        "sha256": "a576691de04137a4dcfcb5cd8eceea0847798cf9eb1d07179d0dcfaee4d4f910"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/low-frequency/pt-log.csv",
+        "pages": 1,
+        "sha256": "b1d403ffff0bdbc30c0209aa211b86a0f9d7cf7000a6772bb0b65a2616090885"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/low-frequency/medication-log.json",
+        "pages": 1,
+        "sha256": "20f9d5307143d54d1a66a0e1cea9ae2646b06c6a6a94a83c0df04a0ec858d46e"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1005",
+    "memberId": "SYN-MEMBER-1005",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "missing-pharmacology",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      },
+      {
+        "date": "2026-09-10",
+        "attended": true
+      }
+    ],
+    "medications": [],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/missing-pharmacology/clinical-note.json",
+        "pages": 1,
+        "sha256": "103588aa21e5c3d19fbb326ba9af2b25ffbe23952c4896a0a3397da105b6ef5f"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/missing-pharmacology/pt-log.csv",
+        "pages": 1,
+        "sha256": "ce7186a4bb5476d93190a3ab76a88c3bbf0a4dbe607a69c7bcf3e69cb80a05ca"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/missing-pharmacology/medication-log.json",
+        "pages": 1,
+        "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1006",
+    "memberId": "SYN-MEMBER-1006",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "contradictory",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      },
+      {
+        "date": "2026-09-10",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-14",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": false,
+    "contradictions": [
+      "Illustrative clinical notes disagree about the course."
+    ],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/contradictory/clinical-note.json",
+        "pages": 1,
+        "sha256": "7500cf87a2eb3e84250380b14cc443875bc36eb5e02585fc5269c7fba1bb75c4"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/contradictory/pt-log.csv",
+        "pages": 1,
+        "sha256": "ce7186a4bb5476d93190a3ab76a88c3bbf0a4dbe607a69c7bcf3e69cb80a05ca"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/contradictory/medication-log.json",
+        "pages": 1,
+        "sha256": "20f9d5307143d54d1a66a0e1cea9ae2646b06c6a6a94a83c0df04a0ec858d46e"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1007",
+    "memberId": "SYN-MEMBER-1007",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "red-flag",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-08-03",
+    "sessions": [],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-08-03",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": true,
+    "redFlagsVerified": true,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/red-flag/clinical-note.json",
+        "pages": 1,
+        "sha256": "38fd79e1f3630e91a31cad369155b40d5c577035a38abaebe89aa82675e6dc1b"
+      }
+    ]
+  },
+  {
+    "claimId": "SYN-CLM-1008",
+    "memberId": "SYN-MEMBER-1008",
+    "cptCode": "72148",
+    "policyNumber": "AMH-RAD-2026",
+    "policyVersion": "1.0",
+    "synthetic": true,
+    "fixtureName": "symptoms-improved",
+    "attestationMode": "SyntheticFixture",
+    "attestedBy": "00000000-0000-4000-8000-000000000001",
+    "attestedAt": "2026-10-01T12:00:00+00:00",
+    "indication": "RadicularPain",
+    "therapyStart": "2026-08-03",
+    "therapyEndExclusive": "2026-09-14",
+    "sessions": [
+      {
+        "date": "2026-08-04",
+        "attended": true
+      },
+      {
+        "date": "2026-08-06",
+        "attended": true
+      },
+      {
+        "date": "2026-08-11",
+        "attended": true
+      },
+      {
+        "date": "2026-08-13",
+        "attended": true
+      },
+      {
+        "date": "2026-08-18",
+        "attended": true
+      },
+      {
+        "date": "2026-08-20",
+        "attended": true
+      },
+      {
+        "date": "2026-08-25",
+        "attended": true
+      },
+      {
+        "date": "2026-08-27",
+        "attended": true
+      },
+      {
+        "date": "2026-09-01",
+        "attended": true
+      },
+      {
+        "date": "2026-09-03",
+        "attended": true
+      },
+      {
+        "date": "2026-09-08",
+        "attended": true
+      },
+      {
+        "date": "2026-09-10",
+        "attended": true
+      }
+    ],
+    "medications": [
+      {
+        "category": "NSAID",
+        "start": "2026-08-03",
+        "endExclusive": "2026-09-14",
+        "verified": true
+      }
+    ],
+    "treatmentFailedOrWorsened": false,
+    "redFlagsVerified": false,
+    "contradictions": [],
+    "sources": [
+      {
+        "documentId": "clinical-note",
+        "path": "sources/symptoms-improved/clinical-note.json",
+        "pages": 1,
+        "sha256": "14f8734e07464bf75a6bca8117e12ea8164423b30c74bda2cfd8863ce504f399"
+      },
+      {
+        "documentId": "pt-log",
+        "path": "sources/symptoms-improved/pt-log.csv",
+        "pages": 1,
+        "sha256": "ce7186a4bb5476d93190a3ab76a88c3bbf0a4dbe607a69c7bcf3e69cb80a05ca"
+      },
+      {
+        "documentId": "medication-log",
+        "path": "sources/symptoms-improved/medication-log.json",
+        "pages": 1,
+        "sha256": "20f9d5307143d54d1a66a0e1cea9ae2646b06c6a6a94a83c0df04a0ec858d46e"
+      }
+    ]
+  }
+]

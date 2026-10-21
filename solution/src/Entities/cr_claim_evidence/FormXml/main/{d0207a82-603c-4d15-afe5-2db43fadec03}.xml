@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{d0207a82-603c-4d15-afe5-2db43fadec03}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form headerdensity="HighWithControls">
+      <tabs>
+        <tab verticallayout="true" id="{47d2fb74-6576-4c44-b462-60dd922db567}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{fe9e74f3-6343-490c-93fd-a6f3b7b85043}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{FE4C5048-972F-42A9-AABA-C408A3E3095B}" showlabel="true">
+                        <labels>
+                          <label description="Evidence ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_evidence_id" datafieldname="cr_evidence_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{3465FD1F-0357-4B80-BF27-15BD1F70BC84}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5CC8DED2-622F-4BCD-BCF2-B6A4DC22AEA1}" showlabel="true">
+                        <labels>
+                          <label description="Claim ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_claim_id" datafieldname="cr_claim_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{5EE67C77-E96B-42FF-8381-7E84B6C69243}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{AEC5707A-3E35-4360-A212-0B661AF92C41}" showlabel="true">
+                        <labels>
+                          <label description="Member ID" languagecode="1033" />
+                        </labels>
+                        <control id="cr_member_id" datafieldname="cr_member_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{2F8CEF0D-99B1-43DA-A843-536ECF058A60}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ECFA7266-59F4-4DE8-9E14-58D14785AA8B}" showlabel="true">
+                        <labels>
+                          <label description="CPT Code" languagecode="1033" />
+                        </labels>
+                        <control id="cr_cpt_code" datafieldname="cr_cpt_code" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" disabled="true" uniqueid="{964A2534-D62E-4BFD-9C05-8A9C4917A46C}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{D588B348-AD30-4E2E-817E-416383AA530A}" showlabel="true">
+                        <labels>
+                          <label description="Verification State" languagecode="1033" />
+                        </labels>
+                        <control id="cr_verification_state" datafieldname="cr_verification_state" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" disabled="true" uniqueid="{DCF4BAAB-E16C-4CAC-BE10-F7570EBD3201}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{E48396D0-8032-4886-BFB0-943FFE860E9A}" showlabel="true">
+                        <labels>
+                          <label description="Source Version" languagecode="1033" />
+                        </labels>
+                        <control id="cr_source_version" datafieldname="cr_source_version" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" disabled="true" uniqueid="{3573B928-8B26-4703-BE51-98AF2BF00B0B}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{3B13A5F6-E56E-48E3-BC29-7C8FAC510D09}" showlabel="true" rowspan="18" auto="false">
+                        <labels>
+                          <label description="Review Summary" languagecode="1033" />
+                        </labels>
+                        <control id="cr_review_summary" datafieldname="cr_review_summary" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" disabled="true" uniqueid="{768825E3-8A70-439F-A00D-91E354DBF4F7}" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+      <header id="{33224dda-fa6c-4a2c-a51a-beaf742e849e}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{62b62915-e95a-4b57-b1a2-388350fc316c}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{62a9879d-686a-415b-b808-97ffa76b6489}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{3918849f-aced-4b17-81a5-511fd39bbb13}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </header>
+      <footer id="{f25b8f7e-d155-4dae-aad7-6b55dbae03ca}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{1c3b5634-9e71-40df-a76e-343f64869090}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{c9b8ee76-902c-4de3-b9d2-81cd45c4b0fd}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{a2497d9b-a6d1-4a14-9409-59044b4da15f}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </footer>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Everyone />
+      </DisplayConditions>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Claims Review - Claim Evidence Facts" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

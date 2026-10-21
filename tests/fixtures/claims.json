@@ -1,0 +1,74 @@
+[
+  {
+    "claimId": "SYN-CLM-1001",
+    "memberId": "SYN-MEMBER-1001",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1002",
+    "memberId": "SYN-MEMBER-1002",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1003",
+    "memberId": "SYN-MEMBER-1003",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1004",
+    "memberId": "SYN-MEMBER-1004",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1005",
+    "memberId": "SYN-MEMBER-1005",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1006",
+    "memberId": "SYN-MEMBER-1006",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1007",
+    "memberId": "SYN-MEMBER-1007",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  },
+  {
+    "claimId": "SYN-CLM-1008",
+    "memberId": "SYN-MEMBER-1008",
+    "cptCode": "72148",
+    "synthetic": true,
+    "version": 1,
+    "status": "Under Review",
+    "serviceDate": "2026-09-20"
+  }
+]

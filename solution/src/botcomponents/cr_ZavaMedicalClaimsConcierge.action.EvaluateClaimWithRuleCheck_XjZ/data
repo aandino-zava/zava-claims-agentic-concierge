@@ -1,0 +1,20 @@
+kind: TaskDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: text
+    description: "JSON with exactly: schemaVersion \"1.0\"; claimId, memberId, cptCode, policyNumber, policyVersion, claimVersion integer copied from FetchClaimEvidence; correlationId and idempotencyKey fresh UUIDs; evidenceReferences array of {documentId,sha256,page} copied from protected sources; proposedFacts {documentedTherapyWeeks:integer|null,ptSessionsPerWeek:integer|null,ptModalityPresent:boolean|null,pharmaPresent:boolean|null,treatmentFailedOrWorsened:boolean|null}; clinicalSummary text; agentRecommendation \"RecommendHumanReview\", \"RequestAdditionalInformation\" or \"EscalateMedicalDirector\". Use only facts belonging to the exact synthetic claim. Do not bind the John Doe appeal to a synthetic alias. Never supply reviewer identity or approval. Missing facts are null. No extra fields. Reuse the exact original request for retry."
+
+modelDisplayName: SubmitClaimEvaluation
+modelDescription: Submit one synthetic claim evaluation to the deterministic Gatekeeper after reading protected evidence and rules. Use the exact claim-evaluation JSON contract. The flow independently checks protected policy and source evidence, creates a durable evaluation and requests Medical Director review. Never invent result status, evaluation IDs or approval. Report only the returned resultJson; if no result was returned, explicitly state submission failed and no evaluation was confirmed.
+outputs:
+  - propertyName: resultjson
+
+action:
+  kind: InvokeFlowTaskAction
+  flowId: 4fcf9742-1ccd-f111-a05a-000d3a33def5
+  connectionProperties:
+    $kind: ConnectionProperties
+    diagnostics:
+    mode: Invoker
+
+outputMode: All

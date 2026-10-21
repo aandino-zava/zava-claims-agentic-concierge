@@ -1,0 +1,29 @@
+{
+  "deploymentScope": "Development",
+  "environmentDisplayName": "",
+  "environmentId": "",
+  "environmentUrl": "",
+  "organizationId": "",
+  "tenantId": "",
+  "publisherUniqueName": "Zava",
+  "publisherDisplayName": "Zava",
+  "publisherPrefix": "cr",
+  "solutionUniqueName": "ZavaMedicalClaimsConcierge",
+  "solutionDisplayName": "Zava Medical Claims Concierge",
+  "mode": "Simulated",
+  "processingEnabled": false,
+  "allowLiveClaimsWrites": false,
+  "medicalDirectorObjectId": "",
+  "medicalDirectorUpn": "",
+  "unauthorizedTestObjectId": "",
+  "searchEndpoint": "",
+  "searchIndex": "",
+  "searchSemanticConfiguration": "",
+  "claimsApiBaseUrl": "",
+  "connections": {
+    "Dataverse": "",
+    "AzureAISearch": "",
+    "Approvals": "",
+    "Teams": ""
+  }
+}

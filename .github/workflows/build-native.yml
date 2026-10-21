@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: microsoft/powerplatform-actions/actions-install@6e91314a9c6e694ea5c894fe8c40e09d73aa892b # v1
+        with:
+          add-tools-to-path: true
       - name: Validate deployment safeguards
         shell: pwsh
         run: ./tests/Test-Deployment.ps1

@@ -6,7 +6,7 @@ Zava Medical Claims Concierge helps an authorized reviewer evaluate a synthetic 
 
 The native demonstration reached `EligibleForHumanReview`, then recorded the authenticated Medical Director's **Escalate** decision and rationale. The synthetic claim stayed at version 1, `Under Review`; real and simulated claim writes were both zero for that decision. A separate ineligible approval response was blocked. The simulator commit branch is implemented and locally tested, but a native approved-write receipt was not exercised in this session.
 
-An authentic unmanaged solution was exported, prepared with processing off, packed with PAC, and checked by Power Apps Checker with zero findings. See [native validation](docs/native-validation.json) and [package provenance](solution/provenance.json). Receiving-tenant import and GitHub workflow execution remain unverified.
+An authentic unmanaged solution was exported, prepared with processing off, packed with PAC, and checked by Power Apps Checker with zero findings. See [native validation](docs/native-validation.json) and [package provenance](solution/provenance.json). Receiving-tenant import remains unverified. The source is published privately; [GitHub Actions](https://github.com/aandino-zava/zava-claims-agentic-concierge/actions) records ordinary validation and native package builds separately from manual tenant deployment.
 
 All claims operations in this POC are simulated. `authorizationGranted` remains false even when a simulated approval completes. The existing Azure claims portal is never mutated by this build.
 

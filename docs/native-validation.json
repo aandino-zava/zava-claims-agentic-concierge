@@ -58,8 +58,17 @@
     "Full concurrency/staleness/fault matrix",
     "Negative account sign-in",
     "Receiving tenant installation",
-    "GitHub workflow execution"
+    "GitHub federated tenant deployment and trust"
   ],
-  "githubPublication": "Not performed; separate user approval required",
-  "organizationAuditReadback": true
+  "githubPublication": "Published to the private aandino-zava/zava-claims-agentic-concierge repository after explicit user approval",
+  "organizationAuditReadback": true,
+  "githubValidation": {
+    "commit": "bb533d93abca53609c3a52a53d520837af6250db",
+    "runUrl": "https://github.com/aandino-zava/zava-claims-agentic-concierge/actions/runs/39571654359",
+    "conclusion": "success",
+    "windows": true,
+    "linux": true,
+    "offlineSdkContract": true,
+    "tenantAccess": false
+  }
 }

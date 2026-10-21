@@ -42,6 +42,8 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r scripts/requirements-deployment.txt
       - uses: microsoft/powerplatform-actions/actions-install@6e91314a9c6e694ea5c894fe8c40e09d73aa892b # v1
+        with:
+          add-tools-to-path: true
       - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}

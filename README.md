@@ -20,6 +20,26 @@ flowchart LR
     Review -->|Verified decision only| Simulator[Claims simulator]
 ```
 
+## Design Rationale
+
+Generative models are useful for understanding requests, coordinating actions, and explaining results. Their answers are probabilistic, so business protections need an enforcement path outside the model's instructions.
+
+When a prompt is the only control over claim decisions, the design is exposed to:
+
+1. **Prompt injection:** a request or retrieved document may attempt to override instructions.
+2. **Instruction drift and hallucination:** the model may apply a rule inconsistently or invent an authorization.
+3. **Maintenance risk:** medical policy, claim evaluation logic, and conversational instructions become difficult to change and test independently.
+
+### The Solution: The Gatekeeper Architecture
+
+The design separates policy, intelligence, and execution:
+
+- **Decoupled policy — Dataverse:** versioned medical policy rules and protected claim evidence live outside the prompt. The Gatekeeper reads them independently and applies the supported structured criteria. Missing or contradictory evidence blocks approval and requires review or additional information.
+- **Bounded intelligence — Copilot Studio:** the agent retrieves guideline context, reads policy and evidence, submits an evaluation request, and explains the returned result. Its tools cannot change policy, edit protected evidence, or directly update a claim. Retrieved content and model reasoning cannot supply authorization.
+- **Deterministic enforcement — Power Automate:** the Gatekeeper validates source bindings and policy criteria, then records a durable evaluation. A separate review worker verifies the authenticated Medical Director decision, rechecks current policy and evidence versions and claim state, and controls simulated operations with duplicate protection and receipt verification.
+
+The design keeps policy enforcement and claim operations in a checked process with required human review. Passing an evaluation establishes eligibility for review; a Medical Director must authorize the decision before any simulated claim change. The Gatekeeper pattern remains the central architectural decision.
+
 ## The Gatekeeper pattern
 
 The agent can gather context, propose an evaluation and explain the result. Authority to act stays in controlled Power Automate flows. This keeps business protections outside the model's instructions, where prompt injection or inconsistent reasoning could otherwise affect a decision.

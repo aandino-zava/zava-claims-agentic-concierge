@@ -4,6 +4,8 @@ A Copilot Studio solution for reviewing fictional medical insurance claims again
 
 **Start with the [deployment guide](docs/deployment.md).** It covers configuration, package import, reviewer access and activation. All claim operations remain simulated.
 
+https://github.com/user-attachments/assets/6b912b5b-055d-416f-9dc2-0d4bb756f177
+
 ## How it works
 
 ```mermaid
@@ -40,7 +42,7 @@ The design separates policy, intelligence, and execution:
 
 The design keeps policy enforcement and claim operations in a checked process with required human review. Passing an evaluation establishes eligibility for review; a Medical Director must authorize the decision before any simulated claim change. The Gatekeeper pattern remains the central architectural decision.
 
-## The Gatekeeper pattern
+## The Gatekeeper pattern explained
 
 The agent can gather context, propose an evaluation and explain the result. Authority to act stays in controlled Power Automate flows. This keeps business protections outside the model's instructions, where prompt injection or inconsistent reasoning could otherwise affect a decision.
 
@@ -65,6 +67,16 @@ The reusable pattern is: **AI coordinates and explains; a controlled process enf
 | Eight fictional examples | Exercise complete evidence, missing information and other policy cases |
 
 The native solution is in `solution/src/`. It reuses an Azure AI Search index and requires no additional Azure compute service.
+
+## Why I built this in Dev
+
+I placed the whole solution in **Zava PP Lab Dev** because this is where I build, test, and refine it. I needed room to adjust the agent, change the rules, and troubleshoot the flows without putting unfinished changes into UAT or Prod.
+
+Keeping the agent, flows, rule table, and connection references together in one unmanaged solution gives me an editable starting point and a package I can export and track in Git. It also keeps this project separate from the Default environment, which my lab design reserves for personal productivity.
+
+Dev is the first step in my application lifecycle management (ALM) approach. UAT is where a release would be checked before production, and Prod is where approved changes would be deployed. This Concierge implementation has been built and demonstrated in Dev; I have not promoted it to UAT or Prod.
+
+For instructions on setting up that environment structure, access controls, deployment pipelines, and approvals, visit my [Zava Power Platform ALM lab repository](https://github.com/aandino-zava/zava-power-platform-lab). Start with its [architecture and rationale](https://github.com/aandino-zava/zava-power-platform-lab/blob/main/docs/architecture-and-rationale.md), then follow the [deployment runbook](https://github.com/aandino-zava/zava-power-platform-lab/blob/main/docs/deployment-runbook.md).
 
 ## Deploy
 

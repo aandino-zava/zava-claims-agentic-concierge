@@ -91,7 +91,7 @@ Packages ship with both flows **Off** and processing disabled. Import does not t
 
 A native demonstration retrieved context, passed the conservative-policy checks and saved an authenticated **Escalate** decision. The claim stayed unchanged. Automated checks cover the local policy reference and deployment safeguards.
 
-Native approved or denied simulator writes, receipt reconciliation, unauthorized-account sign-in and installation in another environment still require acceptance. This is a private, single-reviewer proof of concept, not a production claims adjudication system. See [validation and acceptance](docs/testing.md).
+Native approved or denied simulator writes, receipt reconciliation, unauthorized-account sign-in and installation in another environment still require acceptance. This is a single-reviewer proof of concept with restricted application access, not a production claims adjudication system. See [validation and acceptance](docs/testing.md).
 
 ## Read further
 
@@ -100,4 +100,8 @@ Native approved or denied simulator writes, receipt reconciliation, unauthorized
 - [Demonstration](docs/demo.md)
 - [Maintaining the solution](docs/maintenance.md)
 
-`scripts/` contains setup and packaging tools. `tests/` and `src/claims_concierge/` support automated checks; the Python reference is not deployed as a service. Required native component IDs and dependencies are retained for reliable packaging and import.
+Build and configure the solution in the Power Platform designers. GitHub Actions handles packaging and automated checks; supporting scripts and local verification details are covered in the [maintenance guide](docs/maintenance.md).
+
+## License
+
+This project is available under the [MIT License](LICENSE). See [NOTICE](NOTICE) for platform and third-party licensing boundaries.

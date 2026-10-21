@@ -2,6 +2,8 @@
 
 Deployers can start with the [setup guide](deployment.md). This page covers source checks, packaging and bringing saved Dev changes back into the repository.
 
+The deployed agent and flows run in Power Platform. The Python code in `src/claims_concierge/` is a local policy reference used by automated checks; it is not deployed as a service. The `tests/` directory contains verification cases and fictional data, while `scripts/` contains setup, packaging and verification tools. You can use the documented commands and GitHub Actions without writing Python, although local setup requires the listed tools.
+
 ## Run the checks
 
 Use Python 3.11 or later and PowerShell 7:

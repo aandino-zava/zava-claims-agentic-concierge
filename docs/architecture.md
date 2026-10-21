@@ -1,6 +1,6 @@
 # Architecture and approved decisions
 
-The solution uses Copilot Studio, Dataverse, Power Automate and an existing Azure AI Search index. It adds no Azure compute service. A local Python reference supports automated checks; the deployed Gatekeeper runs in Power Automate.
+The solution uses Copilot Studio, Dataverse, Power Automate and an existing Azure AI Search index. It adds no Azure compute service. The deployed Gatekeeper runs in Power Automate. Supporting local verification is described in the [maintenance guide](maintenance.md).
 
 ```mermaid
 flowchart LR
